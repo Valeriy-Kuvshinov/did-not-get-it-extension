@@ -1,0 +1,17 @@
+@font-face {
+	font-family: "cool-light";
+	src: url("~/assets/fonts/CoolveticaCompressedRg-Regular-400.woff2") format("woff2");
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "cool-regular";
+	src: url("~/assets/fonts/CoolveticaCondensedRg-Regular-400.woff2") format("woff2");
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "cool-bold";
+	src: url("~/assets/fonts/CoolveticaRg-Regular-400.woff2") format("woff2");
+	font-display: swap;
+}

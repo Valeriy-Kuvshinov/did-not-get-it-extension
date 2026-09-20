@@ -3,6 +3,8 @@
 }
 
 html {
+	padding: 0;
+	margin: 0;
 	direction: ltr;
 	scroll-behavior: smooth;
 	font-family: "cool-regular", Arial, sans-serif;
@@ -14,9 +16,10 @@ html {
 
 	body {
 		margin: 0;
-		min-width: 20rem;
-		background: var(--scdclr8);
-		color: var(--prmclr2);
+		padding: 0;
+		min-width: 21rem;
+		max-height: 40rem;
+		background: transparent;
 
 		h1,
 		h2,
@@ -35,20 +38,13 @@ html {
 			word-spacing: 0.1ch;
 		}
 
-		h1 {
-			font-size: 2rem;
-		}
-
-		h2 {
-			font-size: 1.5rem;
-		}
-
 		a {
 			text-decoration: none;
 			transition: all 0.3s ease-in-out;
 			font-family: "cool-bold", Arial, sans-serif;
 
-			&:hover {
+			&:hover,
+			&:focus-visible {
 				text-decoration: none;
 			}
 		}
@@ -57,8 +53,6 @@ html {
 			font-family: "cool-bold", Arial, sans-serif;
 			cursor: pointer;
 			border: none;
-			background: var(--mnrclr1);
-			color: var(--scdclr4);
 			transition: all 0.3s ease-in-out;
 			user-select: none;
 			padding: 0.5rem 1rem;
@@ -67,19 +61,12 @@ html {
 				pointer-events: none;
 				opacity: 0.5;
 			}
-
-			&:hover {
-				background: var(--mnrclr7);
-			}
 		}
 
 		input,
 		textarea,
 		select {
 			width: 100%;
-			background: var(--prmclr1);
-			color: var(--scdclr3);
-			border: 1px solid var(--scdclr1);
 			border-radius: 2px;
 			outline: none;
 			resize: none;
@@ -88,10 +75,6 @@ html {
 			line-height: 1.6;
 			transition: all 0.3s ease-in-out;
 			padding: 0.5rem 0.75rem;
-
-			&:focus {
-				border-color: var(--mnrclr1);
-			}
 		}
 
 		ul,

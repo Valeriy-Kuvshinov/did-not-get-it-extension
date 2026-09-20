@@ -1,0 +1,58 @@
+article {
+	padding: 0.5rem 0.75rem;
+	gap: 1rem;
+	background: var(--scdclr8);
+	color: var(--prmclr2);
+
+	h1 {
+		font-size: 1.5rem;
+	}
+
+	h2 {
+		font-size: 1.25rem;
+	}
+
+	form {
+		grid-template-columns: 1fr auto;
+		gap: 0.5rem;
+
+		.input-area {
+			gap: 0.25rem;
+
+			label {
+				padding: 0 0.5rem;
+				font-size: 1.1rem;
+			}
+
+			input {
+				padding: 0.25rem 0.5rem;
+				background: var(--prmclr1);
+				color: var(--scdclr3);
+				border: 2px solid transparent;
+				border-radius: 0.5rem;
+				font-size: 1rem;
+
+				&:focus,
+				&:focus-visible {
+					border-color: var(--mnrclr1);
+				}
+			}
+		}
+
+		.form-actions button {
+			margin: 0.1rem 0;
+			padding: 0.6rem 1rem;
+			align-self: self-end;
+			background: var(--prmclr2);
+			color: var(--prmclr1);
+			border-radius: 0.25rem;
+			outline: none;
+
+			&:hover,
+			&:focus-visible {
+				background: var(--mnrclr7);
+				color: var(--mnrclr6);
+			}
+		}
+	}
+}

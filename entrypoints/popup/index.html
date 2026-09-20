@@ -5,16 +5,36 @@
 		<meta
 			name="viewport"
 			content="width=device-width, initial-scale=1.0" />
-		<title>Settings</title>
+		<title>Did Not Get It - Skip opening rejection letters</title>
 	</head>
-	<body>
-		<h3>Rejection Tag</h3>
-		<label for="tag-input">Custom label text:</label>
-		<input
-			type="text"
-			id="tag-input"
-			placeholder="🍟 Put the fries in the bag" />
-		<button id="save-btn">Save</button>
+	<body class="flex column">
+		<article class="flex column">
+			<h1>Customize Your Rejection</h1>
+
+			<form class="grid w-100">
+				<div class="input-area flex column">
+					<label for="tag-input">Rejection Label</label>
+					<input
+						type="text"
+						id="tag-input"
+						placeholder="Insert something humorous here..."
+						maxlength="30" />
+				</div>
+				<div class="form-actions flex row">
+					<button
+						id="save-btn"
+						class="h-fit"
+						type="button">
+						Save
+					</button>
+				</div>
+			</form>
+
+			<h2 id="platform-status">Checking platform...</h2>
+
+			<span>Did Not Get It 1.0</span>
+		</article>
+
 		<script
 			type="module"
 			src="./main.ts"></script>

@@ -1,4 +1,4 @@
-import { isRejection } from "./utils/patterns"
+import { isRejectionFormat } from "./utils/patterns"
 
 const ACTION_CHECK_REJECTION = "checkRejection"
 
@@ -26,7 +26,7 @@ export default defineBackground(() => {
 				.then((html) => {
 					const pureText = html.replace(REGEX_STRIP_HTML, " ").replace(/\s+/g, " ").trim()
 
-					const result = isRejection(pureText)
+					const result = isRejectionFormat(pureText)
 
 					console.log(
 						`[Background] Rejection check for ${threadId}: ${result ? "Job Rejection" : "Irrelevant"}`

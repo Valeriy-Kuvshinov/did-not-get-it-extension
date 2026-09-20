@@ -35,7 +35,7 @@ browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
 		platformStatus.textContent = "Detected e-mail platform: Gmail"
 		platformStatus.style.color = "#16a34a"
 	} else {
-		platformStatus.textContent = "No known e-mail platform detected"
+		platformStatus.textContent = "No e-mail platform detected"
 		platformStatus.style.color = "#dc2626"
 	}
 })

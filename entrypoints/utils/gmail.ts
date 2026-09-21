@@ -27,7 +27,7 @@ async function getOrCreateLabel(token: string, labelName: string): Promise<strin
 		name: labelName,
 		labelListVisibility: "labelShow",
 		messageListVisibility: "show",
-		color: "#8a1c0a",
+		color: { textColor: "#ffffff", backgroundColor: "#8a1c0a" },
 	})
 	return createData.id
 }

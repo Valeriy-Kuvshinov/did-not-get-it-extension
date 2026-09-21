@@ -9,11 +9,19 @@
 	</head>
 	<body class="flex column">
 		<article class="flex column">
-			<h1>Customize Your Rejection</h1>
+			<header><h1>Customize Your Rejection</h1></header>
 
-			<form class="grid w-100">
+			<form
+				id="settings-form"
+				class="grid w-100">
 				<div class="input-area flex column">
-					<label for="tag-input">Rejection Label</label>
+					<label
+						id="tag-label"
+						for="tag-input"
+						class="flex row align-center"
+						style="gap: 6px">
+						<span>Rejection Label</span>
+					</label>
 					<input
 						type="text"
 						id="tag-input"
@@ -23,12 +31,17 @@
 				<div class="form-actions flex row">
 					<button
 						id="save-btn"
-						class="h-fit"
-						type="button">
-						Save
+						class="flex row align-center h-fit"
+						type="submit">
+						<span id="save-btn-text">Save</span>
 					</button>
 				</div>
 			</form>
+
+			<div class="scoreboard flex column full-center">
+				<span id="rejection-counter" class="text-family-bold">0</span>
+				<span>Time-wasting emails skipped</span>
+			</div>
 
 			<h2 id="platform-status">Checking platform...</h2>
 

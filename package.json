@@ -1,9 +1,9 @@
 {
-	"name": "wxt-starter",
+	"name": "did-not-get-it-extension",
 	"description": "manifest.json description",
 	"author": "Valeriy Kuvshinov",
 	"private": true,
-	"version": "0.0.0",
+	"version": "1.0.0",
 	"type": "module",
 	"scripts": {
 		"dev": "wxt",

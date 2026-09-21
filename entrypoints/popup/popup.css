@@ -1,15 +1,16 @@
 article {
 	padding: 0.5rem 0.75rem;
 	gap: 1rem;
-	background: var(--scdclr8);
+	background: var(--prmclr1);
 	color: var(--prmclr2);
+	border: 2px solid var(--mnrclr6);
 
 	h1 {
-		font-size: 1.5rem;
+		font-size: 1.4rem;
 	}
 
 	h2 {
-		font-size: 1.25rem;
+		font-size: 1.2rem;
 	}
 
 	form {
@@ -22,13 +23,19 @@ article {
 			label {
 				padding: 0 0.5rem;
 				font-size: 1.1rem;
+				fill: var(--scdclr3);
+
+				svg {
+					width: 1.5rem;
+					height: 1.5rem;
+				}
 			}
 
 			input {
 				padding: 0.25rem 0.5rem;
 				background: var(--prmclr1);
 				color: var(--scdclr3);
-				border: 2px solid transparent;
+				border: 2px solid var(--scdclr4);
 				border-radius: 0.5rem;
 				font-size: 1rem;
 
@@ -41,18 +48,50 @@ article {
 
 		.form-actions button {
 			margin: 0.1rem 0;
-			padding: 0.6rem 1rem;
+			padding: 0.4rem 0.75rem;
 			align-self: self-end;
+			gap: 0.5rem;
 			background: var(--prmclr2);
 			color: var(--prmclr1);
+			fill: var(--prmclr1);
 			border-radius: 0.25rem;
 			outline: none;
+
+			svg {
+				width: 1rem;
+				height: 1rem;
+			}
 
 			&:hover,
 			&:focus-visible {
 				background: var(--mnrclr7);
 				color: var(--mnrclr6);
+				fill: var(--mnrclr6);
 			}
 		}
+	}
+
+	.scoreboard {
+		padding: 1rem;
+		background: var(--mnrclr7);
+		border: 1px solid var(--input-border, #4b5563);
+		border-radius: 0.5rem;
+
+		span {
+			&:first-child {
+				font-size: 2.5rem;
+				color: var(--mnrclr3);
+			}
+
+			&:last-child {
+				margin-top: 0.25rem;
+				font-size: 0.875rem;
+				color: var(--mnrclr8);
+			}
+		}
+	}
+
+	&.firefox-corners {
+		border-radius: 0.5rem;
 	}
 }

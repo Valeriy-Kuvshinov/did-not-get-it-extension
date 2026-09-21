@@ -7,6 +7,33 @@ const ACTION_CHECK_REJECTION = "checkRejection"
 
 const GM_ID_KEY_REGEX = /var\s+GM_ID_KEY\s*=\s*['"]([^'"]+)['"]/i
 
+let pendingIncrements = 0
+let isSyncingCount = false
+
+async function syncRejectionCount() {
+	if (isSyncingCount || pendingIncrements === 0) return
+
+	isSyncingCount = true
+
+	const incrementsToApply = pendingIncrements
+
+	pendingIncrements = 0
+
+	try {
+		const data = await browser.storage.local.get("rejectionCount")
+		const currentCount = (data.rejectionCount as number) || 0
+
+		await browser.storage.local.set({ rejectionCount: currentCount + incrementsToApply })
+	} catch (err) {
+		console.error("[Content] Failed to update rejection counter", err)
+		pendingIncrements += incrementsToApply
+	} finally {
+		isSyncingCount = false
+
+		if (pendingIncrements > 0) syncRejectionCount()
+	}
+}
+
 export default defineContentScript({
 	matches: ["*://mail.google.com/*"],
 	main() {
@@ -55,6 +82,12 @@ export default defineContentScript({
 					})
 					if (response && response.isRejection) {
 						console.log(`REJECTION DETECTED for thread: ${threadId}`)
+
+						// Queue the increment and sync to storage
+						pendingIncrements++
+						syncRejectionCount()
+
+						// TODO: Apply the label and mark as read
 					}
 				} catch (err) {
 					console.error(

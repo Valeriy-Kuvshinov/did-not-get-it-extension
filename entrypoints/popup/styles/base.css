@@ -13,6 +13,7 @@ html {
 	font-size: 16px;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
+	border: none;
 
 	body {
 		margin: 0;
@@ -20,6 +21,7 @@ html {
 		min-width: 21rem;
 		max-height: 40rem;
 		background: transparent;
+		border: none;
 
 		h1,
 		h2,
@@ -63,9 +65,7 @@ html {
 			}
 		}
 
-		input,
-		textarea,
-		select {
+		input {
 			width: 100%;
 			border-radius: 2px;
 			outline: none;
@@ -75,6 +75,18 @@ html {
 			line-height: 1.6;
 			transition: all 0.3s ease-in-out;
 			padding: 0.5rem 0.75rem;
+
+			&:disabled {
+				pointer-events: none;
+				cursor: not-allowed;
+			}
+		}
+
+		img,
+		svg {
+			display: block;
+			max-width: 100%;
+			transition: all 0.3s ease-in-out;
 		}
 
 		ul,

@@ -1,6 +1,12 @@
+import { getAuthToken } from "./utils/auth"
+import { applyLabelAndMarkRead } from "./utils/gmail"
 import { isRejectionFormat } from "./utils/patterns"
 
+const DEFAULT_LABEL = "Put the fries in the bag 🍟"
+
 const ACTION_CHECK_REJECTION = "checkRejection"
+
+const ACTION_MANUAL_AUTH = "manualAuth"
 
 const REGEX_STRIP_HTML = /<[^>]*>?/gm
 
@@ -15,31 +21,46 @@ export default defineBackground(() => {
 
 			const fetchUrl = buildPrintViewUrl(ik, threadId)
 
-			console.log(`[Background] Fetching: ${fetchUrl}`)
-
 			fetch(fetchUrl)
-				.then((res) => {
-					if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
-
-					return res.text()
-				})
-				.then((html) => {
+				.then((res) => res.text())
+				.then(async (html) => {
 					const pureText = html.replace(REGEX_STRIP_HTML, " ").replace(/\s+/g, " ").trim()
-
 					const result = isRejectionFormat(pureText)
 
-					console.log(
-						`[Background] Rejection check for ${threadId}: ${result ? "Job Rejection" : "Irrelevant"}`
-					)
+					if (result) {
+						try {
+							const storage = await browser.storage.local.get("rejectionTag")
+							const labelName =
+								(storage.rejectionTag as string) || "Put the fries in the bag 🍟"
 
-					sendResponse({ isRejection: result })
+							await applyLabelAndMarkRead(threadId, labelName)
+							console.log(`[Background] API Success for ${threadId}`)
+						} catch (apiErr) {
+							console.error(
+								"[Background] Label API failed, but UI will still update:",
+								apiErr
+							)
+						}
+					}
+					sendResponse({
+						isRejection: result,
+						labelName: result ? message.labelName : undefined,
+					})
 				})
 				.catch((err) => {
 					console.error("[Background] Fetch error:", err)
-
 					sendResponse({ isRejection: false })
 				})
+			return true
+		}
 
+		if (message.action === ACTION_MANUAL_AUTH) {
+			getAuthToken(true)
+				.then(() => sendResponse({ success: true }))
+				.catch((err) => {
+					console.error("[Background] Manual Auth Error:", err)
+					sendResponse({ success: false, error: err.message })
+				})
 			return true
 		}
 	})

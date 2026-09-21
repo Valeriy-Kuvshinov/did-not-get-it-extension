@@ -17,6 +17,7 @@ const tagLabel = document.querySelector<HTMLLabelElement>("#tag-label")!
 const saveBtn = document.querySelector<HTMLButtonElement>("#save-btn")!
 const platformStatus = document.querySelector<HTMLHeadingElement>("#platform-status")!
 const counterDisplay = document.querySelector<HTMLSpanElement>("#rejection-counter")!
+const authBtn = document.querySelector<HTMLButtonElement>("#auth-btn")!
 
 tagLabel.prepend(createSvgIcon({ icon: "label" })!)
 saveBtn.prepend(createSvgIcon({ icon: "save" })!)
@@ -25,9 +26,14 @@ if (import.meta.env.BROWSER === "firefox") {
 	document.querySelector("article")?.classList.add("firefox-corners")
 }
 
-browser.storage.local.get(["rejectionTag", "rejectionCount"]).then((result) => {
+browser.storage.local.get(["rejectionTag", "rejectionCount", "isAuthenticated"]).then((result) => {
 	input.value = (result.rejectionTag as string) || DEFAULT_LABEL
 	counterDisplay.textContent = ((result.rejectionCount as number) || 0).toString()
+
+	if (result.isAuthenticated) {
+		authBtn.textContent = "Connected! ✅"
+		authBtn.disabled = true
+	}
 })
 
 browser.storage.onChanged.addListener((changes, areaName) => {
@@ -46,6 +52,27 @@ form.addEventListener("submit", async (e) => {
 	saveBtnText.textContent = "Saved!"
 
 	setTimeout(() => (saveBtnText.textContent = "Save"), SAVE_LABEL_TIMEOUT_MILLIS)
+})
+
+authBtn.addEventListener("click", async () => {
+	try {
+		const response = await browser.runtime.sendMessage({
+			action: "manualAuth",
+		})
+
+		if (response && response.success) {
+			authBtn.textContent = "Connected! ✅"
+			authBtn.disabled = true
+			// Save the state so it survives popup closes
+			await browser.storage.local.set({ isAuthenticated: true })
+		} else {
+			console.error("Auth failed:", response?.error)
+			authBtn.textContent = "Failed ❌"
+			setTimeout(() => (authBtn.textContent = "Connect Gmail"), 2000)
+		}
+	} catch (err) {
+		console.error("Messaging failed:", err)
+	}
 })
 
 // Email platform detection

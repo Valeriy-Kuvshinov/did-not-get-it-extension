@@ -1,4 +1,7 @@
 {
 	"extends": "./.wxt/tsconfig.json",
+	"compilerOptions": {
+		"types": ["chrome"]
+	},
 	"exclude": ["node_modules"]
 }

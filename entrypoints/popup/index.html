@@ -9,17 +9,18 @@
 	</head>
 	<body class="flex column">
 		<article class="flex column">
-			<header><h1>Customize Your Rejection</h1></header>
+			<header class="flex full-center w-100">
+				<h1>Customize Your Rejection</h1>
+			</header>
 
 			<form
-				id="settings-form"
+				id="label-form"
 				class="grid w-100">
 				<div class="input-area flex column">
 					<label
 						id="tag-label"
 						for="tag-input"
-						class="flex row align-center"
-						style="gap: 6px">
+						class="flex row align-center">
 						<span>Rejection Label</span>
 					</label>
 					<input
@@ -28,14 +29,12 @@
 						placeholder="Insert something humorous here..."
 						maxlength="30" />
 				</div>
-				<div class="form-actions flex row">
-					<button
-						id="save-btn"
-						class="flex row align-center h-fit"
-						type="submit">
-						<span id="save-btn-text">Save</span>
-					</button>
-				</div>
+				<button
+					id="save-btn"
+					class="flex row align-center h-fit"
+					type="submit">
+					<span id="save-btn-text">Save</span>
+				</button>
 			</form>
 
 			<div class="scoreboard flex column full-center">
@@ -44,17 +43,47 @@
 					class="text-family-bold"
 					>0</span
 				>
-				<span>"Polite" corporate emails skipped</span>
+				<span>"Polite" corporate emails detected</span>
 			</div>
 
-			<button
-				id="auth-btn"
-				class="flex row align-center h-fit"
-				type="button">
-				<span>Verify</span>
-			</button>
+			<h2
+				id="platform-status"
+				class="text-center">
+				Checking platform...
+			</h2>
 
-			<h2 id="platform-status">Checking platform...</h2>
+			<section
+				id="auth-container"
+				class="flex column">
+				<h3 id="auth-text">Gmail connection required to apply labels</h3>
+				<button
+					id="auth-btn"
+					class="w-fit"
+					type="button">
+					<span>Connect to Google</span>
+				</button>
+			</section>
+
+			<section
+				id="toggle-container"
+				class="flex column"
+				style="display: none">
+				<h3 id="toggle-text">Status: Active - Scanning incoming emails.</h3>
+				<div class="actions flex row justify-between">
+					<button
+						id="toggle-btn"
+						class="w-fit"
+						type="button">
+						<span id="toggle-btn-text">Pause Scanning</span>
+					</button>
+
+					<button
+						id="disconnect-btn"
+						type="button">
+						<span>Disconnect Google</span>
+					</button>
+				</div>
+			</section>
 
 			<span>Did Not Get It 1.0</span>
 		</article>

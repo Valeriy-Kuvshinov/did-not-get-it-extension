@@ -1,12 +1,12 @@
-export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE"
+type HttpMethod = "GET" | "POST" | "PUT" | "DELETE"
 
-export interface HttpConfig extends RequestInit {
+interface HttpConfig extends RequestInit {
 	method: HttpMethod
 	headers: Record<string, string>
 	body?: string
 }
 
-const HTTP_ABORT_TIMEOUT_MILLIS = 1000 * 60 * 3
+const HTTP_ABORT_TIMEOUT_MILLIS = 3 * 1000 * 60
 
 async function request<T>(
 	method: HttpMethod,

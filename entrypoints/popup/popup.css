@@ -5,15 +5,11 @@ article {
 	color: var(--prmclr2);
 	border: 2px solid var(--mnrclr6);
 
-	h1 {
+	header h1 {
 		font-size: 1.4rem;
 	}
 
-	h2 {
-		font-size: 1.2rem;
-	}
-
-	form {
+	#label-form {
 		grid-template-columns: 1fr auto;
 		gap: 0.5rem;
 
@@ -23,6 +19,7 @@ article {
 			label {
 				padding: 0 0.5rem;
 				font-size: 1.1rem;
+				gap: 0.5rem;
 				fill: var(--scdclr3);
 
 				svg {
@@ -46,7 +43,7 @@ article {
 			}
 		}
 
-		.form-actions button {
+		button {
 			margin: 0.1rem 0;
 			padding: 0.4rem 0.75rem;
 			align-self: self-end;
@@ -72,9 +69,10 @@ article {
 	}
 
 	.scoreboard {
+		margin: 1rem 0;
 		padding: 1rem;
 		background: var(--mnrclr7);
-		border: 1px solid var(--input-border, #4b5563);
+		border: 1px solid var(--mnrclr8);
 		border-radius: 0.5rem;
 
 		span {
@@ -89,6 +87,63 @@ article {
 				color: var(--mnrclr8);
 			}
 		}
+	}
+
+	#auth-container {
+		gap: 0.5rem;
+
+		button {
+			margin: 0.1rem 0;
+			padding: 0.5rem 1rem;
+			align-self: center;
+			background: var(--mnrclr6);
+			color: var(--prmclr1);
+			border-radius: 0.25rem;
+			outline: none;
+
+			&:hover,
+			&:focus-visible {
+				background: var(--mnrclr7);
+				color: var(--mnrclr6);
+			}
+		}
+	}
+
+	#toggle-container {
+		gap: 0.5rem;
+
+		button {
+			margin: 0.1rem 0;
+			padding: 0.5rem 0.75rem;
+			border-radius: 0.25rem;
+			outline: none;
+		}
+
+		#toggle-btn {
+			background: var(--prmclr2);
+			color: var(--prmclr1);
+
+			&:hover,
+			&:focus-visible {
+				background: var(--mnrclr7);
+				color: var(--mnrclr6);
+			}
+		}
+
+		#disconnect-btn {
+			background: var(--scdclr1);
+			color: var(--mnrclr3);
+
+			&:hover,
+			&:focus-visible {
+				background: var(--mnrclr3);
+				color: var(--scdclr1);
+			}
+		}
+	}
+
+	#platform-status {
+		font-size: 1.2rem;
 	}
 
 	&.firefox-corners {

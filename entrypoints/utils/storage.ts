@@ -14,6 +14,7 @@ async function syncRejectionCount() {
 
 	try {
 		const data = await browser.storage.local.get("rejectionCount")
+
 		const currentCount = (data.rejectionCount as number) || 0
 
 		await browser.storage.local.set({ rejectionCount: currentCount + incrementsToApply })

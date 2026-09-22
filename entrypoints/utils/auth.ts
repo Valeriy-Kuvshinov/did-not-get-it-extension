@@ -1,19 +1,21 @@
-const CLIENT_ID = "682125325975-eamf6fht1le31qgpjkrsg49qur0kvov0.apps.googleusercontent.com"
+const CLIENT_ID = "835730581135-ntqktfhbdrvof2ruki406sqg8498gbgt.apps.googleusercontent.com"
 
 const SCOPES = ["https://www.googleapis.com/auth/gmail.modify"]
 
-const GOOGLE_OAUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
-
-const GOOGLE_REVOKE_URL = "https://oauth2.googleapis.com/revoke"
+const OAUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
 
 let cachedToken: string | null = null
 let tokenExpiry = 0
+
+function buildRevokeAuthUrl(cachedToken: string) {
+	return `https://oauth2.googleapis.com/revoke?token=${cachedToken}`
+}
 
 export async function getAuthToken(interactive = false): Promise<string> {
 	if (cachedToken && Date.now() < tokenExpiry) return cachedToken
 
 	const redirectUrl = browser.identity.getRedirectURL()
-	const authUrl = new URL(GOOGLE_OAUTH_URL)
+	const authUrl = new URL(OAUTH_URL)
 
 	authUrl.searchParams.append("client_id", CLIENT_ID)
 	authUrl.searchParams.append("response_type", "token")
@@ -44,7 +46,7 @@ export async function getAuthToken(interactive = false): Promise<string> {
 export async function revokeAuthToken(): Promise<void> {
 	if (cachedToken) {
 		try {
-			await fetch(`${GOOGLE_REVOKE_URL}?token=${cachedToken}`, {
+			await fetch(buildRevokeAuthUrl(cachedToken), {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/x-www-form-urlencoded",

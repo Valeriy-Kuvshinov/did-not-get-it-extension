@@ -1,5 +1,4 @@
 import { getAuthToken } from "./auth"
-import { httpGet, httpPost } from "./http"
 
 interface GmailLabel {
 	id: string
@@ -17,18 +16,34 @@ function buildLabelModifyUrl(threadId: string) {
 }
 
 async function getOrCreateLabel(token: string, labelName: string): Promise<string> {
-	const data = await httpGet<LabelsResponse>(GOOGLE_LABELS_URL, token)
+	const res = await fetch(GOOGLE_LABELS_URL, {
+		headers: { Authorization: `Bearer ${token}` },
+	})
 
+	if (!res.ok) throw new Error(`Failed to fetch labels: ${await res.text()}`)
+
+	const data: LabelsResponse = await res.json()
 	const existing = data.labels?.find((label) => label.name === labelName)
 
 	if (existing) return existing.id
 
-	const createData = await httpPost<GmailLabel>(GOOGLE_LABELS_URL, token, {
-		name: labelName,
-		labelListVisibility: "labelShow",
-		messageListVisibility: "show",
-		color: { textColor: "#ffffff", backgroundColor: "#8a1c0a" },
+	const createRes = await fetch(GOOGLE_LABELS_URL, {
+		method: "POST",
+		headers: {
+			Authorization: `Bearer ${token}`,
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			name: labelName,
+			labelListVisibility: "labelShow",
+			messageListVisibility: "show",
+			color: { textColor: "#ffffff", backgroundColor: "#8a1c0a" },
+		}),
 	})
+	if (!createRes.ok) throw new Error(`Failed to create label: ${await createRes.text()}`)
+
+	const createData: GmailLabel = await createRes.json()
+
 	return createData.id
 }
 
@@ -37,8 +52,16 @@ export async function applyLabelAndMarkRead(threadId: string, labelName: string)
 
 	const labelId = await getOrCreateLabel(token, labelName)
 
-	await httpPost(buildLabelModifyUrl(threadId), token, {
-		addLabelIds: [labelId],
-		removeLabelIds: ["UNREAD"],
+	const modifyRes = await fetch(buildLabelModifyUrl(threadId), {
+		method: "POST",
+		headers: {
+			Authorization: `Bearer ${token}`,
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			addLabelIds: [labelId],
+			removeLabelIds: ["UNREAD"],
+		}),
 	})
+	if (!modifyRes.ok) throw new Error(`Failed to modify thread: ${await modifyRes.text()}`)
 }

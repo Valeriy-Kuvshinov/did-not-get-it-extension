@@ -4,7 +4,7 @@ export default defineConfig({
 	manifest: {
 		name: "Did Not Get It",
 		description:
-			"Save yourself some time reading corporate jargon, tag job rejection emails in Gmail automatically.",
+			"Automatically tag job rejections in Gmail. Skip the corporate fluff and protect your peace.",
 		permissions: ["storage", "identity"],
 		host_permissions: ["*://mail.google.com/*", "*://gmail.googleapis.com/*"],
 		browser_specific_settings: {

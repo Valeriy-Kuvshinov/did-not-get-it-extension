@@ -10,6 +10,9 @@ export default defineConfig({
 		browser_specific_settings: {
 			gecko: {
 				id: "did-not-get-it@valeriy.com",
+				data_collection_permissions: {
+					required: ["none"],
+				},
 			},
 		},
 	},

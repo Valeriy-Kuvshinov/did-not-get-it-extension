@@ -8,9 +8,10 @@ import "./popup.css"
 import type { AppStorage, AppStorageChanges } from "@/interfaces/storage"
 import type { ResponseManualAuth } from "@/interfaces/auth"
 
+import { ACTION_DISCONNECT, ACTION_MANUAL_AUTH, DEFAULT_LABEL } from "../constants/constants"
+
 import { createSvgIcon } from "@/components/SvgIcon"
 
-const DEFAULT_LABEL = "Put the fries in the bag 🍟"
 const SAVE_LABEL_TIMEOUT_MILLIS = 1500
 const GMAIL_AUTH_TIMEOUT_MILLIS = 2 * 1000
 
@@ -80,7 +81,7 @@ form.addEventListener("submit", async (e) => {
 authBtn.addEventListener("click", async () => {
 	try {
 		const response = (await browser.runtime.sendMessage({
-			action: "manualAuth",
+			action: ACTION_MANUAL_AUTH,
 		})) as ResponseManualAuth
 
 		if (response && response.success) {
@@ -106,7 +107,7 @@ toggleBtn.addEventListener("click", async () => {
 })
 
 disconnectBtn.addEventListener("click", async () => {
-	await browser.runtime.sendMessage({ action: "disconnect" })
+	await browser.runtime.sendMessage({ action: ACTION_DISCONNECT })
 
 	await browser.storage.local.set({ isAuthenticated: false, isPaused: false })
 

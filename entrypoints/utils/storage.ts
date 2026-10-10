@@ -1,4 +1,4 @@
-const DEFAULT_LABEL = "Put the fries in the bag 🍟"
+import { DEFAULT_LABEL } from "../constants/constants"
 
 let pendingIncrements = 0
 let isSyncingCount = false

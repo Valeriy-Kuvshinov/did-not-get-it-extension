@@ -1,5 +1,7 @@
 import type { AppStorageChanges } from "@/interfaces/storage"
 
+import { ACTION_CHECK_REJECTION } from "./constants/constants"
+
 import { getIkToken, updateRowVisually } from "./utils/dom"
 import { getRejectionLabel, incrementRejectionCount } from "./utils/storage"
 
@@ -41,7 +43,7 @@ async function processRow(
 
 	try {
 		const response = await browser.runtime.sendMessage({
-			action: "checkRejection",
+			action: ACTION_CHECK_REJECTION,
 			threadId: threadId,
 			ik: ik,
 			labelName: currentLabel,

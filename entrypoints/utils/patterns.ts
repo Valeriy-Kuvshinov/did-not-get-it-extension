@@ -1,4 +1,4 @@
-export const REJECTION_PATTERNS: RegExp[] = [
+const REJECTION_PATTERNS: RegExp[] = [
 	// Moving forward with someone else
 	/(?:move forward|proceed|advancing) with (?:other|another) (?:candidate|applicant)s?/i,
 

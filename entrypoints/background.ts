@@ -1,36 +1,32 @@
 import type { ResponseManualAuth } from "@/interfaces/auth"
 
+import {
+	ACTION_DISCONNECT,
+	ACTION_MANUAL_AUTH,
+	ACTION_CHECK_REJECTION,
+	DEFAULT_LABEL,
+} from "./constants/constants"
+
 import { isRejectionFormat } from "./utils/patterns"
 import { revokeAuthToken, getAuthToken } from "./utils/auth"
 import { applyLabelAndMarkRead } from "./utils/gmail"
 
-interface MsgCheckRejection {
-	action: "checkRejection"
+interface Message {
+	action: string
+}
+
+interface MsgCheckRejection extends Message {
 	threadId: string
 	ik: string
 	labelName: string
 }
 
-interface MsgManualAuth {
-	action: "manualAuth"
-}
-
-interface MsgDisconnect {
-	action: "disconnect"
-}
-
-type ExtensionMessage = MsgCheckRejection | MsgManualAuth | MsgDisconnect
+type ExtensionMessage = MsgCheckRejection | Message
 
 interface ResponseCheckRejection {
 	isRejection: boolean
 	labelName?: string
 }
-
-const DEFAULT_LABEL = "Put the fries in the bag 🍟"
-
-const ACTION_CHECK_REJECTION = "checkRejection"
-
-const ACTION_MANUAL_AUTH = "manualAuth"
 
 const REGEX_STRIP_HTML = /<[^>]*>?/gm
 
@@ -92,7 +88,7 @@ export default defineBackground(() => {
 				})
 			return true
 		}
-		if (message.action === "disconnect") {
+		if (message.action === ACTION_DISCONNECT) {
 			revokeAuthToken()
 			sendResponse({ success: true })
 			return true

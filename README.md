@@ -22,8 +22,6 @@ To build and package this extension from source, your environment must meet the 
 - **Language:** Vanilla TypeScript
 - **APIs:** Gmail REST API via OAuth 2.0 (`browser.identity.launchWebAuthFlow`), Chrome/Firefox Extension Manifest V3 APIs.
 
----
-
 ## Step-by-Step Build Instructions
 
 Follow these steps to set up the development environment and generate an exact copy of the production add-on package.

@@ -2,7 +2,7 @@
 
 "Did Not Get It" is a cross-browser extension for Firefox and Chrome that automatically identifies, labels, and marks Gmail rejection emails as read while maintaining a local "rejections skipped" counter.
 
-Developed by [Kuvware](https://kuvware.com).
+Developed by [Kuvshinov Software](https://kuvware.com).
 
 ## Source Code Submission Requirements
 

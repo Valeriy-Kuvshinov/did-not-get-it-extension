@@ -7,87 +7,8 @@
 			content="width=device-width, initial-scale=1.0" />
 		<title>Did Not Get It - Skip opening rejection letters</title>
 	</head>
-	<body class="flex column">
-		<article class="flex column">
-			<header class="flex full-center w-100">
-				<h1>Customize Your Rejection</h1>
-			</header>
-
-			<form
-				id="label-form"
-				class="grid w-100">
-				<div class="input-area flex column">
-					<label
-						id="tag-label"
-						for="tag-input"
-						class="flex row align-center">
-						<span>Rejection Label</span>
-					</label>
-					<input
-						type="text"
-						id="tag-input"
-						placeholder="Insert something humorous here..."
-						maxlength="30" />
-				</div>
-				<button
-					id="save-btn"
-					class="flex row align-center h-fit"
-					type="submit">
-					<span id="save-btn-text">Save</span>
-				</button>
-			</form>
-
-			<div class="scoreboard flex column full-center">
-				<span
-					id="rejection-counter"
-					class="text-family-bold"
-					>0</span
-				>
-				<span>"Polite" corporate emails detected</span>
-			</div>
-
-			<h2
-				id="platform-status"
-				class="text-center">
-				Checking platform...
-			</h2>
-
-			<section
-				id="auth-container"
-				class="flex column">
-				<h3 id="auth-text">Gmail connection required to apply labels</h3>
-				<button
-					id="auth-btn"
-					class="w-fit"
-					type="button">
-					<span>Connect to Google</span>
-				</button>
-			</section>
-
-			<section
-				id="toggle-container"
-				class="flex column"
-				style="display: none">
-				<h3 id="toggle-text">Status: Active - Scanning incoming emails.</h3>
-				<div class="actions flex row justify-between">
-					<button
-						id="toggle-btn"
-						class="w-fit"
-						type="button">
-						<span id="toggle-btn-text">Pause Scanning</span>
-					</button>
-
-					<button
-						id="disconnect-btn"
-						type="button">
-						<span>Disconnect Google</span>
-					</button>
-				</div>
-			</section>
-
-			<span>Did Not Get It 1.0</span>
-		</article>
-
+	<body>
+		<div id="app"></div>
 		<script
 			type="module"
 			src="./main.ts"></script>

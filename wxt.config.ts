@@ -1,4 +1,5 @@
 import { defineConfig } from "wxt"
+import { svelte } from "@sveltejs/vite-plugin-svelte"
 
 export default defineConfig({
 	manifest: {
@@ -16,4 +17,7 @@ export default defineConfig({
 			},
 		},
 	},
+	vite: () => ({
+		plugins: [svelte()],
+	}),
 })

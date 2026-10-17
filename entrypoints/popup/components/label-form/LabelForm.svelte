@@ -29,7 +29,7 @@
 		<label
 			for="tag-input"
 			class="flex row align-center">
-			<span>Rejection Label</span>
+			<span>Custom Label</span>
 			<SvgIcon icon="label" />
 		</label>
 		<input

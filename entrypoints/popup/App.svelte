@@ -5,7 +5,8 @@
 
 	import { DEFAULT_LABEL, ACTION_MANUAL_AUTH, ACTION_DISCONNECT } from "../constants/constants"
 
-	import LabelForm from "./components/LabelForm.svelte"
+	import LabelForm from "./components/label-form/LabelForm.svelte"
+	import PlatformStatus from "./components/platform-status/PlatformStatus.svelte"
 
 	const GMAIL_AUTH_TIMEOUT_MILLIS = 2000
 
@@ -15,8 +16,6 @@
 	let isPaused: boolean = false
 
 	let authBtnText = "Connect to Google"
-	let platformText = "Checking platform..."
-	let platformColor = "inherit"
 
 	const storageListener = (changes: any, areaName: string) => {
 		if (areaName !== "local") return
@@ -51,17 +50,6 @@
 		isPaused = !!data.isPaused
 
 		browser.storage.onChanged.addListener(storageListener)
-
-		const tabs = await browser.tabs.query({ active: true, currentWindow: true })
-		const activeTabUrl = tabs[0]?.url || ""
-
-		if (activeTabUrl.includes("mail.google.com")) {
-			platformText = "Detected platform: Gmail"
-			platformColor = "#16a34a"
-		} else {
-			platformText = "No e-mail platform detected"
-			platformColor = "#dc2626"
-		}
 	})
 
 	onDestroy(() => {
@@ -96,9 +84,8 @@
 </script>
 
 <article
-	class="app-container flex column {import.meta.env.BROWSER === 'firefox'
-		? 'firefox-corners'
-		: ''}">
+	class="app-container flex column"
+	class:firefox-corners={import.meta.env.BROWSER === "firefox"}>
 	<header class="app-header flex full-center w-100">
 		<h1>Customize Your Rejection</h1>
 	</header>
@@ -110,11 +97,7 @@
 		<span>"Polite" corporate emails detected</span>
 	</div>
 
-	<h2
-		class="platform-status text-center"
-		style="color: {platformColor}">
-		{platformText}
-	</h2>
+	<PlatformStatus />
 
 	{#if !isAuthenticated}
 		<section class="auth-container flex column">

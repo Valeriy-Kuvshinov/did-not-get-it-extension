@@ -30,13 +30,31 @@
 		const tabs = await browser.tabs.query({ active: true, currentWindow: true })
 		const url = tabs[0]?.url || ""
 
-		if (url.includes("mail.google.com")) platform = "gmail"
-		else if (url.includes("outlook.live.com") || url.includes("outlook.office.com"))
-			platform = "outlook"
-		else if (url.includes("mail.proton.me")) platform = "proton"
-		else if (url.includes("icloud.com/mail")) platform = "icloud"
-		else if (url.includes("mail.yahoo.com")) platform = "yahoo"
-		else platform = "unknown"
+		switch (true) {
+			case url.includes("mail.google.com"):
+				platform = "gmail"
+				break
+
+			case url.includes("outlook.live.com"):
+			case url.includes("outlook.office.com"):
+				platform = "outlook"
+				break
+
+			case url.includes("mail.proton.me"):
+				platform = "proton"
+				break
+
+			case url.includes("icloud.com/mail"):
+				platform = "icloud"
+				break
+
+			case url.includes("mail.yahoo.com"):
+				platform = "yahoo"
+				break
+
+			default:
+				platform = "unknown"
+		}
 	})
 </script>
 

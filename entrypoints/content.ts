@@ -11,12 +11,10 @@ const SELECTOR_THREAD_ID_CONTAINER = "span[data-legacy-thread-id]"
 const ATTR_THREAD_ID = "data-legacy-thread-id"
 
 let isExtensionPaused = false
-let isUserAuthenticated = false
 let currentLabel = ""
 
 browser.storage.local.get(["isPaused", "isAuthenticated"]).then((res) => {
 	isExtensionPaused = !!res.isPaused
-	isUserAuthenticated = !!res.isAuthenticated
 })
 
 getRejectionLabel().then((label) => {
@@ -24,11 +22,9 @@ getRejectionLabel().then((label) => {
 })
 
 browser.storage.onChanged.addListener((changes: AppStorageChanges) => {
-	const { isPaused, rejectionTag, isAuthenticated } = changes
+	const { isPaused, rejectionTag } = changes
 
 	if (isPaused?.newValue !== undefined) isExtensionPaused = isPaused.newValue
-
-	if (isAuthenticated?.newValue !== undefined) isUserAuthenticated = isAuthenticated.newValue
 
 	if (rejectionTag?.newValue !== undefined) currentLabel = rejectionTag.newValue
 })
@@ -65,7 +61,7 @@ export default defineContentScript({
 		const processedRows = new Set<string>()
 
 		const observer = new MutationObserver(async () => {
-			if (isExtensionPaused || !isUserAuthenticated) return
+			if (isExtensionPaused) return
 
 			const unreadRows = document.querySelectorAll<HTMLTableRowElement>(SELECTOR_UNREAD_ROW)
 

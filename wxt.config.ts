@@ -6,8 +6,8 @@ export default defineConfig({
 		name: "Did Not Get It",
 		description:
 			"Automatically tag job rejections in Gmail. Skip the corporate fluff and protect your peace.",
-		permissions: ["storage", "identity"],
-		host_permissions: ["*://mail.google.com/*", "*://gmail.googleapis.com/*"],
+		permissions: ["storage"],
+		host_permissions: ["*://mail.google.com/*"],
 		browser_specific_settings: {
 			gecko: {
 				id: "did-not-get-it@valeriy.com",

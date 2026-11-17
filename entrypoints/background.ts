@@ -1,14 +1,6 @@
-import type { ResponseManualAuth } from "@/interfaces/auth"
-
-import {
-	ACTION_DISCONNECT,
-	ACTION_MANUAL_AUTH,
-	ACTION_CHECK_REJECTION,
-	DEFAULT_LABEL,
-} from "./constants/constants"
+import { ACTION_CHECK_REJECTION, DEFAULT_LABEL } from "./constants/constants"
 
 import { isRejectionFormat } from "./utils/patterns"
-import { revokeAuthToken, getAuthToken } from "./utils/auth"
 import { applyLabelAndMarkRead } from "./utils/gmail"
 
 interface Message {
@@ -77,20 +69,6 @@ export default defineBackground(() => {
 					console.error("[Background] Fetch error:", err)
 					sendResponse({ isRejection: false } as ResponseCheckRejection)
 				})
-			return true
-		}
-		if (message.action === ACTION_MANUAL_AUTH) {
-			getAuthToken(true)
-				.then(() => sendResponse({ success: true } as ResponseManualAuth))
-				.catch((err) => {
-					console.error("[Background] Manual Auth Error:", err)
-					sendResponse({ success: false, error: err.message } as ResponseManualAuth)
-				})
-			return true
-		}
-		if (message.action === ACTION_DISCONNECT) {
-			revokeAuthToken()
-			sendResponse({ success: true })
 			return true
 		}
 	})

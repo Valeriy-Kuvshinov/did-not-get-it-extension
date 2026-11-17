@@ -40,7 +40,6 @@
 			background: var(--mnrclr6);
 			color: var(--prmclr1);
 			border-radius: 0.25rem;
-			outline: none;
 
 			&:hover,
 			&:focus-visible {
@@ -56,29 +55,15 @@
 		button {
 			margin: 0.1rem 0;
 			padding: 0.5rem 0.75rem;
-			border-radius: 0.25rem;
-			outline: none;
-		}
-
-		.toggle-btn {
 			background: var(--prmclr2);
 			color: var(--prmclr1);
+			border-radius: 0.25rem;
+			align-self: center;
 
 			&:hover,
 			&:focus-visible {
 				background: var(--mnrclr7);
 				color: var(--mnrclr6);
-			}
-		}
-
-		.disconnect-btn {
-			background: var(--scdclr1);
-			color: var(--mnrclr3);
-
-			&:hover,
-			&:focus-visible {
-				background: var(--mnrclr3);
-				color: var(--scdclr1);
 			}
 		}
 	}

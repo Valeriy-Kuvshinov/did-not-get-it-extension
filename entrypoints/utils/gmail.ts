@@ -1,5 +1,3 @@
-import { getAuthToken } from "./auth"
-
 interface GmailLabel {
 	id: string
 	name: string
@@ -48,20 +46,21 @@ async function getOrCreateLabel(token: string, labelName: string): Promise<strin
 }
 
 export async function applyLabelAndMarkRead(threadId: string, labelName: string) {
-	const token = await getAuthToken(false)
+	// const token = await getAuthToken(false)
 
-	const labelId = await getOrCreateLabel(token, labelName)
+	// const labelId = await getOrCreateLabel(token, labelName)
 
-	const modifyRes = await fetch(buildLabelModifyUrl(threadId), {
-		method: "POST",
-		headers: {
-			Authorization: `Bearer ${token}`,
-			"Content-Type": "application/json",
-		},
-		body: JSON.stringify({
-			addLabelIds: [labelId],
-			removeLabelIds: ["UNREAD"],
-		}),
-	})
-	if (!modifyRes.ok) throw new Error(`Failed to modify thread: ${await modifyRes.text()}`)
+	// const modifyRes = await fetch(buildLabelModifyUrl(threadId), {
+	// 	method: "POST",
+	// 	headers: {
+	// 		Authorization: `Bearer ${token}`,
+	// 		"Content-Type": "application/json",
+	// 	},
+	// 	body: JSON.stringify({
+	// 		addLabelIds: [labelId],
+	// 		removeLabelIds: ["UNREAD"],
+	// 	}),
+	// })
+	// if (!modifyRes.ok) throw new Error(`Failed to modify thread: ${await modifyRes.text()}`)
+	return
 }

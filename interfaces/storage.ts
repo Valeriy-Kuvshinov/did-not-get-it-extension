@@ -1,7 +1,6 @@
 export interface AppStorage {
 	rejectionTag: string
 	rejectionCount: number
-	isAuthenticated: boolean
 	isPaused: boolean
 }
 

@@ -41,7 +41,6 @@ form {
 		color: var(--prmclr1);
 		fill: var(--prmclr1);
 		border-radius: 0.25rem;
-		outline: none;
 
 		svg {
 			width: 1rem;

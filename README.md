@@ -34,15 +34,7 @@ Open your terminal in the root project directory and install the required projec
 npm install
 ```
 
-### 2. Configure Environment Variables
-
-If your OAuth Client ID is not hardcoded, create a `.env` file in the root directory and configure it:
-
-```env
-WXT_GOOGLE_CLIENT_ID=your-google-oauth-client-id.apps.googleusercontent.com
-```
-
-### 3. Build for Production
+### 2. Build for Production
 
 Execute the following build scripts to trigger all necessary technical steps to bundle and compile the production package.
 

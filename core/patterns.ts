@@ -29,6 +29,15 @@ const REJECTION_PATTERNS: RegExp[] = [
 	/(?:while|although) your (?:background|experience) is (?:certainly |very |indeed )?impressive/i,
 ]
 
+/** Purge apostrophe variants like `don'?t` to process the text normally */
+function normalizeText(text: string): string {
+	return text
+		.replace(/&#39;|&#x27;|&rsquo;|&lsquo;|[\u2018\u2019]/g, "'")
+		.replace(/&nbsp;|\s+/g, " ")
+}
+
 export function isRejectionFormat(text: string): boolean {
-	return REJECTION_PATTERNS.some((regex) => regex.test(text))
+	const normalized = normalizeText(text)
+
+	return REJECTION_PATTERNS.some((regex) => regex.test(normalized))
 }

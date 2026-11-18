@@ -13,14 +13,14 @@ For those who wish to replicate locally, I included step-by-step build instructi
 To build and package this extension from source, your environment must meet the following requirements:
 
 - **Operating System:** Cross-platform (Linux, macOS, or Windows)
-- **Node.js:** Version 18.x or higher (LTS recommended). Download and install from [nodejs.org](https://nodejs.org/).
+- **Node.js:** Version 20.19+ or 22.12+ (required by Vite 8). Download and install from [nodejs.org](https://nodejs.org/).
 - **npm:** Version 9.x or higher (comes bundled with Node.js).
 
 ## Technology Stack
 
 - **Framework/Bundler:** [WXT](https://wxt.dev/) (Web Extension Tools)
-- **Language:** Vanilla TypeScript
-- **APIs:** Gmail REST API via OAuth 2.0 (`browser.identity.launchWebAuthFlow`), Chrome/Firefox Extension Manifest V3 APIs.
+- **Language:** TypeScript, Svelte 5 (popup)
+- **APIs:** No external APIs and no OAuth. A content script works through Gmail's web interface; the only extension permission is `storage`.
 
 ## Step-by-Step Build Instructions
 

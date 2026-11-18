@@ -3,7 +3,9 @@
 
 	import { onMount, onDestroy } from "svelte"
 
-	import { DEFAULT_LABEL } from "../constants/constants"
+	import { DEFAULT_LABEL } from "@/constants/constants"
+
+	import { isPausedItem, rejectionCountItem, rejectionTagItem } from "@/core/storage"
 
 	import LabelForm from "./components/label-form/LabelForm.svelte"
 	import PlatformStatus from "./components/platform-status/PlatformStatus.svelte"
@@ -12,42 +14,24 @@
 	let rejectionCount: number = 0
 	let isPaused: boolean = false
 
-	const storageListener = (changes: any, areaName: string) => {
-		if (areaName !== "local") return
-
-		const {
-			isPaused: pausedChange,
-			rejectionCount: countChange,
-			rejectionTag: tagChange,
-		} = changes
-
-		if (pausedChange?.newValue !== undefined) isPaused = pausedChange.newValue as boolean
-
-		if (countChange?.newValue !== undefined) rejectionCount = countChange.newValue as number
-
-		if (tagChange?.newValue !== undefined) rejectionTag = tagChange.newValue as string
-	}
+	const unwatchers: (() => void)[] = []
 
 	onMount(async () => {
-		const data = await browser.storage.local.get([
-			"rejectionTag",
-			"rejectionCount",
-			"isPaused",
-		])
+		rejectionTag = await rejectionTagItem.getValue()
+		rejectionCount = await rejectionCountItem.getValue()
+		isPaused = await isPausedItem.getValue()
 
-		rejectionTag = (data.rejectionTag as string) || DEFAULT_LABEL
-		rejectionCount = (data.rejectionCount as number) || 0
-		isPaused = !!data.isPaused
-
-		browser.storage.onChanged.addListener(storageListener)
+		unwatchers.push(
+			rejectionTagItem.watch((value) => (rejectionTag = value)),
+			rejectionCountItem.watch((value) => (rejectionCount = value)),
+			isPausedItem.watch((value) => (isPaused = value))
+		)
 	})
 
-	onDestroy(() => {
-		browser.storage.onChanged.removeListener(storageListener)
-	})
+	onDestroy(() => unwatchers.forEach((unwatch) => unwatch()))
 
 	async function handleToggle() {
-		await browser.storage.local.set({ isPaused: !isPaused })
+		await isPausedItem.setValue(!isPaused)
 	}
 </script>
 
@@ -81,5 +65,5 @@
 		</button>
 	</section>
 
-	<span>Did Not Get It 1.0.2</span>
+	<span>Did Not Get It {browser.runtime.getManifest().version}</span>
 </article>

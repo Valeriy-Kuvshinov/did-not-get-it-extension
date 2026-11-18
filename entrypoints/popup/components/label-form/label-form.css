@@ -19,7 +19,7 @@ form {
 
 		input {
 			padding: 0.25rem 0.5rem;
-			background: var(--prmclr1);
+			background: var(--scdclr5);
 			color: var(--scdclr3);
 			border: 2px solid var(--scdclr4);
 			border-radius: 0.5rem;
@@ -27,7 +27,7 @@ form {
 
 			&:focus,
 			&:focus-visible {
-				border-color: var(--mnrclr1);
+				border-color: var(--mnrclr6);
 			}
 		}
 	}

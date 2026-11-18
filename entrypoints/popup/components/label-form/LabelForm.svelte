@@ -1,6 +1,8 @@
 <script lang="ts">
 	import "./label-form.css"
 
+	import { saveLabel } from "@/core/storage"
+
 	import SvgIcon from "@/global-components/SvgIcon.svelte"
 
 	export let rejectionTag: string
@@ -12,9 +14,7 @@
 	async function handleSave(e: Event) {
 		e.preventDefault()
 
-		const newTag = rejectionTag.trim()
-
-		await browser.storage.local.set({ rejectionTag: newTag })
+		await saveLabel(rejectionTag)
 
 		btnText = "Saved!"
 

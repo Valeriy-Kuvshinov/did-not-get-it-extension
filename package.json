@@ -3,7 +3,7 @@
 	"description": "manifest.json description",
 	"author": "Valeriy Kuvshinov",
 	"private": true,
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"type": "module",
 	"scripts": {
 		"dev": "wxt",
@@ -12,18 +12,16 @@
 		"build:firefox": "wxt build -b firefox",
 		"zip": "wxt zip",
 		"zip:firefox": "wxt zip -b firefox",
-		"compile": "tsc --noEmit",
+		"compile": "tsc --noEmit && svelte-check --tsconfig ./tsconfig.json",
 		"postinstall": "wxt prepare"
 	},
 	"devDependencies": {
 		"@sveltejs/vite-plugin-svelte": "^7.3.1",
-		"@types/chrome": "^0.3.7",
+		"svelte": "^5.57.3",
+		"svelte-check": "^4.7.8",
 		"typescript": "^6.0.3",
 		"vite": "^8.3.8",
 		"web-ext": "^10.8.0",
 		"wxt": "^0.21.5"
-	},
-	"dependencies": {
-		"svelte": "^5.57.3"
 	}
 }

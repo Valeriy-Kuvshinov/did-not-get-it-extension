@@ -6,6 +6,8 @@
 	import type { IconName } from "@/global-components/icon.map"
 	import type { Platform } from "@/interfaces/mail"
 
+	import { isRecognizedPlatform } from "@/providers/platforms"
+
 	import SvgIcon from "@/global-components/SvgIcon.svelte"
 
 	interface PlatformDetails {
@@ -28,33 +30,8 @@
 
 	onMount(async () => {
 		const tabs = await browser.tabs.query({ active: true, currentWindow: true })
-		const url = tabs[0]?.url || ""
 
-		switch (true) {
-			case url.includes("mail.google.com"):
-				platform = "gmail"
-				break
-
-			case url.includes("outlook.live.com"):
-			case url.includes("outlook.office.com"):
-				platform = "outlook"
-				break
-
-			case url.includes("mail.proton.me"):
-				platform = "proton"
-				break
-
-			case url.includes("icloud.com/mail"):
-				platform = "icloud"
-				break
-
-			case url.includes("mail.yahoo.com"):
-				platform = "yahoo"
-				break
-
-			default:
-				platform = "unknown"
-		}
+		platform = isRecognizedPlatform(tabs[0]?.url ?? "")
 	})
 </script>
 

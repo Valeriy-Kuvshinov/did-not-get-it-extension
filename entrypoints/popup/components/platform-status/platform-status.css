@@ -4,25 +4,43 @@
 
 	h2 {
 		font-size: 1rem;
-		color: var(--scdclr4);
+		color: var(--scdclr2);
+	}
+
+	.platforms {
+		grid-template-columns: repeat(5, 1fr);
+		gap: 0.375rem;
 	}
 
 	.badge {
-		gap: 0.5rem;
-		padding: 0.5rem 1rem;
-		background: var(--scdclr4);
-		color: var(--scdclr2);
-		border: 2px solid var(--scdclr3);
+		gap: 0.25rem;
+		padding: 0.4rem 0.125rem 0.2rem;
+		background: var(--scdclr1);
+		color: var(--prmclr1);
 		border-radius: 0.5rem;
-		font-size: 1.1rem;
+		opacity: 0.5;
+		filter: grayscale(1);
+		user-select: none;
 
 		svg {
-			width: 2rem;
-			height: 2rem;
+			width: 1.75rem;
+			height: 1.75rem;
+		}
+
+		span {
+			font-size: 0.75rem;
+			letter-spacing: 0;
 		}
 
 		&.detected {
-			border-color: var(--mnrclr6);
+			opacity: 1;
+			filter: none;
+			box-shadow: 0 0 0.5rem color-mix(in srgb, var(--mnrclr1) 75%, transparent);
 		}
+	}
+
+	.coming-soon {
+		font-size: 0.875rem;
+		color: var(--scdclr2);
 	}
 }

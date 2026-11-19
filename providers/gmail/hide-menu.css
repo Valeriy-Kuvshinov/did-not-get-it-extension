@@ -1,0 +1,5 @@
+html.did-not-get-it-hide [role="menu"],
+html.did-not-get-it-hide [role="menu"] *,
+html.did-not-get-it-hide [role="tooltip"] {
+	visibility: hidden !important;
+}

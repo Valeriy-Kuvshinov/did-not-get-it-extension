@@ -1,3 +1,5 @@
+import "./hide-menu.css"
+
 import type { MailAdapter, MailCandidate } from "@/interfaces/mail"
 
 import { sleep, userInputSince, waitFor } from "../dom"
@@ -27,6 +29,8 @@ import { GMAIL_DOM } from "./selectors"
 const UI_SETTLE_MS = 150
 const VERIFY_TIMEOUT_MS = 5000
 
+const WORKING_CLASS = "did-not-get-it-hide"
+
 function getCandidates(labelName: string): MailCandidate[] {
 	const candidates: MailCandidate[] = []
 
@@ -46,13 +50,22 @@ function getCandidates(labelName: string): MailCandidate[] {
 	return candidates
 }
 
-async function markAsRejection(ids: string[], labelName: string): Promise<string[]> {
+async function markAsRejection(
+	ids: string[],
+	labelName: string,
+	markAsRead: boolean
+): Promise<string[]> {
 	if (!isIdle()) return [] // the user is busy; try later
 
 	const startedAt = performance.now()
+
 	const previousFocus = document.activeElement
-	const alreadyDone = ids.filter((id) => isDone(findRow(id), labelName))
+
+	const alreadyDone = ids.filter((id) => isDone(findRow(id), labelName, markAsRead))
+
 	const selected: string[] = []
+
+	document.documentElement.classList.add(WORKING_CLASS)
 
 	try {
 		for (const id of ids) {
@@ -69,17 +82,17 @@ async function markAsRejection(ids: string[], labelName: string): Promise<string
 
 		await sleep(UI_SETTLE_MS)
 
-		// Last point to back off
-		if (userInputSince(startedAt)) return alreadyDone
+		if (userInputSince(startedAt)) return alreadyDone // Last point to back off
 
 		await applyLabelToSelection(labelName)
 
-		await sleep(UI_SETTLE_MS)
-		markSelectionAsRead()
-
+		if (markAsRead) {
+			await sleep(UI_SETTLE_MS)
+			markSelectionAsRead()
+		}
 		await waitFor(
-			() => selected.every((id) => isDone(findRow(id), labelName)),
-			`"${labelName}" + read state on ${selected.length} row(s)`,
+			() => selected.every((id) => isDone(findRow(id), labelName, markAsRead)),
+			`"${labelName}"${markAsRead ? " + read state" : ""} on ${selected.length} row(s)`,
 			VERIFY_TIMEOUT_MS
 		)
 
@@ -89,7 +102,10 @@ async function markAsRejection(ids: string[], labelName: string): Promise<string
 
 		deselect(selected)
 
-		if (previousFocus instanceof HTMLElement) previousFocus.focus({ preventScroll: true })
+		if (previousFocus instanceof HTMLElement && document.activeElement !== previousFocus) {
+			previousFocus.focus({ preventScroll: true })
+		}
+		document.documentElement.classList.remove(WORKING_CLASS)
 	}
 }
 

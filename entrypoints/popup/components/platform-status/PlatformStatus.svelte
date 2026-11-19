@@ -3,45 +3,54 @@
 
 	import { onMount } from "svelte"
 
-	import type { IconName } from "@/global-components/icon.map"
 	import type { Platform } from "@/interfaces/mail"
 
-	import { isRecognizedPlatform } from "@/providers/platforms"
+	import { detectPlatform } from "@/providers/platforms"
 
 	import SvgIcon from "@/global-components/SvgIcon.svelte"
 
 	interface PlatformDetails {
+		id: Platform
 		label: string
-		icon: IconName
+		/** Has a working adapter. Flip it when the platform lands */
+		isAvailable: boolean
 	}
 
-	let platform: Platform = "unknown"
+	const PLATFORMS: PlatformDetails[] = [
+		{ id: "gmail", label: "Gmail", isAvailable: true },
+		{ id: "outlook", label: "Outlook", isAvailable: false },
+		{ id: "proton", label: "Proton", isAvailable: false },
+		{ id: "icloud", label: "iCloud", isAvailable: false },
+		{ id: "yahoo", label: "Yahoo", isAvailable: false },
+	]
 
-	const PLATFORM_MAP: Record<Platform, PlatformDetails> = {
-		gmail: { label: "Gmail", icon: "gmail" },
-		outlook: { label: "Outlook", icon: "outlook" },
-		proton: { label: "ProtonMail", icon: "proton" },
-		icloud: { label: "iCloud", icon: "icloud" },
-		yahoo: { label: "Yahoo", icon: "yahoo" },
-		unknown: { label: "Unknown", icon: "globe" },
-	}
+	let detected: Platform | null = null
 
-	$: details = PLATFORM_MAP[platform] || PLATFORM_MAP.unknown
+	$: comingSoon = PLATFORMS.find(({ id, isAvailable }) => id === detected && !isAvailable)
 
 	onMount(async () => {
-		const tabs = await browser.tabs.query({ active: true, currentWindow: true })
+		const [tab] = await browser.tabs.query({ active: true, currentWindow: true })
 
-		platform = isRecognizedPlatform(tabs[0]?.url ?? "")
+		detected = detectPlatform(tab?.url ?? "")
 	})
 </script>
 
-<div class="platform-status flex column full-center">
-	<h2>Detected Platform:</h2>
+<section class="platform-status flex column full-center">
+	<h2>Supported Platforms</h2>
 
-	<div
-		class="badge flex row align-center"
-		class:detected={platform !== "unknown"}>
-		<SvgIcon icon={details.icon} />
-		<span>{details.label}</span>
-	</div>
-</div>
+	<ul class="platforms grid w-100">
+		{#each PLATFORMS as { id, label }}
+			<li
+				class="badge fast-trans flex column align-center"
+				class:detected={id === detected}
+				aria-current={id === detected ? "true" : undefined}>
+				<SvgIcon icon={id} />
+				<span>{label}</span>
+			</li>
+		{/each}
+	</ul>
+
+	{#if comingSoon}
+		<span class="coming-soon">{comingSoon.label} support coming soon...</span>
+	{/if}
+</section>

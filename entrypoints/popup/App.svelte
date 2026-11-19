@@ -5,34 +5,30 @@
 
 	import { DEFAULT_LABEL } from "@/constants/constants"
 
-	import { isPausedItem, rejectionCountItem, rejectionTagItem } from "@/core/storage"
+	import { rejectionCountItem, rejectionTagItem, unseenCountItem } from "@/core/storage"
 
+	import Controls from "./components/controls/Controls.svelte"
 	import LabelForm from "./components/label-form/LabelForm.svelte"
 	import PlatformStatus from "./components/platform-status/PlatformStatus.svelte"
 
 	let rejectionTag: string = DEFAULT_LABEL
 	let rejectionCount: number = 0
-	let isPaused: boolean = false
 
 	const unwatchers: (() => void)[] = []
 
 	onMount(async () => {
 		rejectionTag = await rejectionTagItem.getValue()
 		rejectionCount = await rejectionCountItem.getValue()
-		isPaused = await isPausedItem.getValue()
+
+		void unseenCountItem.setValue(0)
 
 		unwatchers.push(
 			rejectionTagItem.watch((value) => (rejectionTag = value)),
-			rejectionCountItem.watch((value) => (rejectionCount = value)),
-			isPausedItem.watch((value) => (isPaused = value))
+			rejectionCountItem.watch((value) => (rejectionCount = value))
 		)
 	})
 
 	onDestroy(() => unwatchers.forEach((unwatch) => unwatch()))
-
-	async function handleToggle() {
-		await isPausedItem.setValue(!isPaused)
-	}
 </script>
 
 <article
@@ -51,19 +47,7 @@
 
 	<PlatformStatus />
 
-	<section class="toggle-container flex column">
-		<h3 style="color: {isPaused ? '#9ca3af' : '#f3f4f6'}">
-			Status: {isPaused
-				? "Paused - Not labelling Rejections"
-				: "Active - Scanning incoming emails"}
-		</h3>
-		<button
-			class="w-fit"
-			type="button"
-			on:click={handleToggle}>
-			{isPaused ? "Resume Scanning" : "Pause Scanning"}
-		</button>
-	</section>
+	<Controls />
 
-	<span>Did Not Get It {browser.runtime.getManifest().version}</span>
+	<span class="app-version">Did Not Get It {browser.runtime.getManifest().version}</span>
 </article>

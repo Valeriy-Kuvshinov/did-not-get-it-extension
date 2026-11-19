@@ -1,12 +1,12 @@
 const REGEX_STRIP_BLOCKS = /<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi
 const REGEX_STRIP_TAGS = /<[^>]*>?/g
 
-const USER_ACTIONS = ["mouseover", "mousedown", "mouseup", "click"]
+const CLICK_SEQUENCE = ["mouseover", "mousedown", "mouseup", "click"]
 
 let lastUserInputAt = -Infinity
 
 function recordUserInput(e: Event) {
-	if (e.isTrusted) lastUserInputAt = performance.now() // events we dispatch are never trusted
+	if (e.isTrusted) lastUserInputAt = performance.now()
 }
 
 for (const type of ["pointerdown", "keydown", "wheel"]) {
@@ -70,7 +70,7 @@ export function realClick(el: Element) {
 		clientX: rect.left + rect.width / 2,
 		clientY: rect.top + rect.height / 2,
 	}
-	for (const type of USER_ACTIONS) {
+	for (const type of CLICK_SEQUENCE) {
 		el.dispatchEvent(new MouseEvent(type, init))
 	}
 }

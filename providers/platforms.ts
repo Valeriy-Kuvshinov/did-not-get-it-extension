@@ -1,6 +1,6 @@
 import type { Platform } from "@/interfaces/mail"
 
-const PLATFORM_URLS: Record<Exclude<Platform, "unknown">, string[]> = {
+const PLATFORM_URLS: Record<Platform, string[]> = {
 	gmail: ["mail.google.com"],
 	outlook: ["outlook.live.com", "outlook.office.com"],
 	proton: ["mail.proton.me"],
@@ -8,9 +8,9 @@ const PLATFORM_URLS: Record<Exclude<Platform, "unknown">, string[]> = {
 	yahoo: ["mail.yahoo.com"],
 }
 
-export function isRecognizedPlatform(url: string): Platform {
+export function detectPlatform(url: string): Platform | null {
 	for (const [platform, parts] of Object.entries(PLATFORM_URLS)) {
 		if (parts.some((part) => url.includes(part))) return platform as Platform
 	}
-	return "unknown"
+	return null
 }

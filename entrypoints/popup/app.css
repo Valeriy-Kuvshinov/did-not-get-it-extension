@@ -1,78 +1,43 @@
 .app-container {
 	padding: 0.5rem 0.75rem;
 	gap: 1rem;
-	background: var(--scdclr2);
-	color: var(--prmclr2);
-	border: 2px solid var(--mnrclr6);
+	background: var(--prmclr1);
+	color: var(--scdclr1);
+	border: 2px solid var(--scdclr2);
 
 	.app-header h1 {
 		font-size: 1.4rem;
+		color: var(--mnrclr1);
 	}
 
 	.scoreboard {
 		margin: 1rem 0;
 		padding: 1rem;
-		background: var(--mnrclr7);
-		border: 1px solid var(--mnrclr8);
+		background: var(--prmclr2);
+		border: 1px solid var(--prmclr4);
 		border-radius: 0.5rem;
 
 		span {
 			&:first-child {
 				font-size: 2.5rem;
-				color: var(--mnrclr3);
+				color: var(--mnrclr2);
 			}
 
 			&:last-child {
 				margin-top: 0.25rem;
 				font-size: 0.875rem;
-				color: var(--mnrclr8);
+				color: var(--scdclr2);
 			}
 		}
 	}
 
-	.auth-container {
-		gap: 0.5rem;
-
-		button {
-			margin: 0.1rem 0;
-			padding: 0.5rem 1rem;
-			align-self: center;
-			background: var(--mnrclr6);
-			color: var(--prmclr1);
-			border-radius: 0.25rem;
-
-			&:hover,
-			&:focus-visible {
-				background: var(--mnrclr7);
-				color: var(--mnrclr6);
-			}
-		}
-	}
-
-	.toggle-container {
-		gap: 0.5rem;
-
-		button {
-			margin: 0.1rem 0;
-			padding: 0.5rem 0.75rem;
-			background: var(--prmclr2);
-			color: var(--prmclr1);
-			border-radius: 0.25rem;
-			align-self: center;
-
-			&:hover,
-			&:focus-visible {
-				background: var(--mnrclr7);
-				color: var(--mnrclr6);
-			}
-		}
-	}
-
-	.platform-status {
-		font-size: 1.2rem;
+	.app-version {
+		font-size: 0.75rem;
+		color: var(--scdclr3);
 	}
 
 	&.firefox-corners {
 		border-radius: 0.5rem;
+		overflow: hidden;
 	}
 }

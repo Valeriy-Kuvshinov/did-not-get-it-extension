@@ -1,4 +1,4 @@
-export type Platform = "gmail" | "outlook" | "proton" | "icloud" | "yahoo" | "unknown"
+export type Platform = "gmail" | "outlook" | "proton" | "icloud" | "yahoo"
 
 export interface MailCandidate {
 	id: string
@@ -12,6 +12,7 @@ export interface MailAdapter {
 	getCandidates(labelName: string): MailCandidate[]
 	// Full plain-text body. Only called when subject + snippet are inconclusive
 	fetchBody(candidate: MailCandidate): Promise<string>
+	// Labels the threads, and marks them read when `markAsRead` is set
 	// Returns fewer (or none) when the user is busy or interrupts; the caller retries those later
-	markAsRejection(ids: string[], labelName: string): Promise<string[]>
+	markAsRejection(ids: string[], labelName: string, markAsRead: boolean): Promise<string[]>
 }

@@ -49,8 +49,9 @@ export function hasLabel(row: Element, labelName: string): boolean {
 	)
 }
 
-export function isDone(row: Element | null, labelName: string): boolean {
-	return !!row && hasLabel(row, labelName) && !isUnread(row)
+/** Labeled, and also read (if user wants rejections marked as read) */
+export function isDone(row: Element | null, labelName: string, markAsRead: boolean): boolean {
+	return !!row && hasLabel(row, labelName) && (!markAsRead || !isUnread(row))
 }
 
 export function textOf(row: Element, selector: string): string {

@@ -1,0 +1,68 @@
+.controls {
+	gap: 0.75rem;
+
+	.toggle-container {
+		gap: 0.5rem;
+
+		h3 {
+			gap: 0.5rem;
+			color: var(--scdclr1);
+
+			&::before {
+				content: "";
+				width: 0.5rem;
+				height: 0.5rem;
+				border-radius: 50%;
+				background: var(--mnrclr3);
+			}
+
+			&.paused {
+				color: var(--scdclr3);
+
+				&::before {
+					background: var(--scdclr3);
+				}
+			}
+		}
+
+		button {
+			margin: 0.1rem 0;
+			padding: 0.5rem 0.75rem;
+			align-self: center;
+			background: transparent;
+			color: var(--mnrclr1);
+			border: 2px solid var(--mnrclr1);
+			border-radius: 0.25rem;
+
+			&:hover,
+			&:focus-visible {
+				background: var(--mnrclr1);
+				color: var(--prmclr1);
+			}
+		}
+	}
+
+	label {
+		gap: 0.5rem;
+		color: var(--scdclr2);
+		cursor: pointer;
+
+		input {
+			width: 1.1rem;
+			height: 1.1rem;
+			margin: 0;
+			padding: 0;
+			accent-color: var(--mnrclr1);
+			color-scheme: dark;
+			cursor: pointer;
+
+			&:focus-visible {
+				outline: 2px solid var(--mnrclr1);
+			}
+		}
+
+		&:hover {
+			color: var(--scdclr1);
+		}
+	}
+}

@@ -3,7 +3,7 @@ import type { MailAdapter, MailCandidate } from "@/interfaces/mail"
 import { sleep } from "@/providers/dom"
 
 import { isRejectionFormat } from "./patterns"
-import { incrementRejectionCount, isPausedItem, rejectionTagItem } from "./storage"
+import { incrementRejectionCount, isAutoReadItem, isPausedItem, rejectionTagItem } from "./storage"
 
 const SCAN_THROTTLE_MS = 1500
 const RETRY_MS = 5000
@@ -24,7 +24,9 @@ export class Scanner {
 
 	private isPaused = false
 	private isScanning = false
+	private isAutoRead = true
 	private labelName = ""
+
 	private timer: ReturnType<typeof setTimeout> | undefined
 
 	/** Classified as "not a rejection", already marked, or failed (retried on resume or reload) */
@@ -42,21 +44,25 @@ export class Scanner {
 
 	async start() {
 		this.isPaused = await isPausedItem.getValue()
+		this.isAutoRead = await isAutoReadItem.getValue()
 		this.labelName = await rejectionTagItem.getValue()
 
 		this.unwatchers.push(
 			rejectionTagItem.watch((name) => (this.labelName = name)),
+			isAutoReadItem.watch((autoRead) => (this.isAutoRead = autoRead)),
 			isPausedItem.watch((paused) => this.onPausedChange(paused))
 		)
-
 		this.observer.observe(document.body, { childList: true, subtree: true })
+
 		this.schedule()
 	}
 
 	stop() {
 		this.isPaused = true
+
 		this.observer.disconnect()
 		this.unwatchers.forEach((unwatch) => unwatch())
+
 		clearTimeout(this.timer)
 	}
 
@@ -123,7 +129,7 @@ export class Scanner {
 		const ids = [...this.pending]
 
 		try {
-			const marked = await this.adapter.markAsRejection(ids, this.labelName)
+			const marked = await this.adapter.markAsRejection(ids, this.labelName, this.isAutoRead)
 
 			this.moveToDone(marked)
 

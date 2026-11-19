@@ -1,23 +1,14 @@
 :root {
-	/* Primary Colors */
-	--prmclr1: #333230;
-	--prmclr2: #e2e2e2;
-	--prmclr3: #0f0f0f;
+	--prmclr1: #171514;
+	--prmclr2: #23201e;
+	--prmclr3: #2e2a27;
+	--prmclr4: #3d3834;
 
-	/* Secondary Colors */
-	--scdclr1: #504a48;
-	--scdclr2: #1f1c1b;
-	--scdclr3: #bcbcbc;
-	--scdclr4: #f5f5f5;
-	--scdclr5: #2a2a2a;
-	--scdclr6: #8f8f8f;
+	--scdclr1: #f2efe9;
+	--scdclr2: #c4bdb4;
+	--scdclr3: #9a938b;
 
-	--mnrclr1: #007bff;
-	--mnrclr2: #39ff14;
-	--mnrclr3: #dc143c;
-	--mnrclr4: #110220;
-	--mnrclr5: #ffa500;
-	--mnrclr6: #ffd300;
-	--mnrclr7: #00072c;
-	--mnrclr8: #9ca3af;
+	--mnrclr1: #ffc928; /* fries yellow */
+	--mnrclr2: #ff4b3e; /* ketchup red */
+	--mnrclr3: #4ade80; /* active status */
 }

@@ -1,4 +1,4 @@
-import type { Platform } from "@/interfaces/mail"
+import type { Platform } from "@/shared/interfaces/mail"
 
 const PLATFORM_URLS: Record<Platform, string[]> = {
 	gmail: ["mail.google.com"],

@@ -1,4 +1,4 @@
-import type { MailAdapter, Platform } from "@/interfaces/mail"
+import type { MailAdapter, Platform } from "@/shared/interfaces/mail"
 
 import { gmailAdapter } from "./gmail/adapter"
 import { detectPlatform } from "./platforms"

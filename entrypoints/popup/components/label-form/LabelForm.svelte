@@ -1,9 +1,11 @@
 <script lang="ts">
 	import "./label-form.css"
 
+	import { sleep } from "@/shared/utils"
+
 	import { saveLabel } from "@/core/storage"
 
-	import SvgIcon from "@/global-components/SvgIcon.svelte"
+	import SvgIcon from "../svg-icon/SvgIcon.svelte"
 
 	export let rejectionTag: string
 
@@ -17,8 +19,8 @@
 		await saveLabel(rejectionTag)
 
 		btnText = "Saved!"
-
-		setTimeout(() => (btnText = "Save"), SAVE_LABEL_TIMEOUT_MILLIS)
+		await sleep(SAVE_LABEL_TIMEOUT_MILLIS)
+		btnText = "Save"
 	}
 </script>
 

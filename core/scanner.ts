@@ -1,19 +1,19 @@
-import type { MailAdapter, MailCandidate } from "@/interfaces/mail"
+import type { MailAdapter, MailCandidate } from "@/shared/interfaces/mail"
 
-import { sleep } from "@/providers/dom"
+import { sleep } from "@/shared/utils"
 
 import { isRejectionFormat } from "./patterns"
 import { incrementRejectionCount, isAutoReadItem, isPausedItem, rejectionTagItem } from "./storage"
 
-const SCAN_THROTTLE_MS = 1500
-const RETRY_MS = 5000
-const BODY_FETCH_GAP_MS = 400
+const SCAN_THROTTLE_MILLIS = 1500
+const RETRY_MILLIS = 5000
+const BODY_FETCH_GAP_MILLIS = 400
 
 /** Subject + snippet first, fetches full body if preview is inconclusive */
 async function isRejection(adapter: MailAdapter, candidate: MailCandidate): Promise<boolean> {
 	if (isRejectionFormat(`${candidate.subject} ${candidate.snippet}`)) return true
 
-	await sleep(BODY_FETCH_GAP_MS)
+	await sleep(BODY_FETCH_GAP_MILLIS)
 
 	return isRejectionFormat(await adapter.fetchBody(candidate))
 }
@@ -77,7 +77,7 @@ export class Scanner {
 		this.schedule(0)
 	}
 
-	private schedule(delay = SCAN_THROTTLE_MS) {
+	private schedule(delay = SCAN_THROTTLE_MILLIS) {
 		if (this.timer !== undefined) return
 
 		this.timer = setTimeout(() => {
@@ -143,7 +143,7 @@ export class Scanner {
 		}
 
 		// The adapter backed off for the user, or rows are off-page: try again later.
-		if (this.pending.size > 0) this.schedule(RETRY_MS)
+		if (this.pending.size > 0) this.schedule(RETRY_MILLIS)
 	}
 
 	private moveToDone(ids: string[]) {

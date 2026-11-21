@@ -1,6 +1,6 @@
-import type { MailCandidate } from "@/interfaces/mail"
+import type { MailCandidate } from "@/shared/interfaces/mail"
 
-import { htmlToText } from "../dom"
+import { htmlToText } from "@/shared/utils"
 
 const GM_ID_KEY_REGEX = /var\s+GM_ID_KEY\s*=\s*['"]([^'"]+)['"]/i
 const ACCOUNT_INDEX_REGEX = /\/u\/(\d+)/

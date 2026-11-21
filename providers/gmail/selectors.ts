@@ -23,6 +23,22 @@ export const GMAIL_DOM = {
 
 	// Menus
 	menu: '[role="menu"]',
-	labelAsSubmenu: '[role="menuitem"].J-Ph',
+	submenuItem: '[role="menuitem"].J-Ph',
 	labelItem: '[role="menuitemcheckbox"]',
+	createLabelItem: '[role="menuitem"][act="14"]',
+	addCustomColorItem: '[data-grid-width] + [role="menuitem"]',
+	colorSwatch: '[role="gridcell"] > [title]',
+
+	// Sidebar
+	sidebar: '[role="navigation"]',
+	sidebarCollapsedClass: "bhZ",
+	sidebarSlidOpenClass: "bym",
+	sidebarSlidingClass: "aaj",
+	sidebarLabelBtn: '[role="button"][data-label-name]',
+
+	// Dialogs ("New label", "Add custom color")
+	dialog: '[aria-modal="true"]',
+	dialogInput: 'input[type="text"]',
+	dialogOkBtn: 'button[data-mdc-dialog-action="ok"]',
+	dialogCancelBtn: 'button[data-mdc-dialog-action="cancel"]',
 } as const

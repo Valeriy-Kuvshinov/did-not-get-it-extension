@@ -3,11 +3,11 @@
 
 	import { onMount } from "svelte"
 
-	import type { Platform } from "@/interfaces/mail"
+	import type { Platform } from "@/shared/interfaces/mail"
 
 	import { detectPlatform } from "@/providers/platforms"
 
-	import SvgIcon from "@/global-components/SvgIcon.svelte"
+	import SvgIcon from "../svg-icon/SvgIcon.svelte"
 
 	interface PlatformDetails {
 		id: Platform

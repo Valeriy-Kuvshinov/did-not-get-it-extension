@@ -1,8 +1,10 @@
 import "./stealth.css"
 
-import type { MailAdapter, MailCandidate } from "@/interfaces/mail"
+import type { MailAdapter, MailCandidate } from "@/shared/interfaces/mail"
 
-import { sleep, userInputSince, waitFor } from "../dom"
+import { sleep, waitFor } from "@/shared/utils"
+
+import { userInputSince } from "../dom"
 import { fetchBody } from "./fetch-body"
 import {
 	findRow,
@@ -12,7 +14,7 @@ import {
 	isIdle,
 	isUnread,
 	textOf,
-	visibleRows,
+	getVisibleRows,
 } from "./page"
 import {
 	selectRow,
@@ -21,18 +23,19 @@ import {
 	deselectRows,
 	deselectAll,
 	closeLeftoverMenus,
+	colorNewLabel,
 } from "./actions"
 import { GMAIL_DOM } from "./selectors"
 
-const UI_SETTLE_MS = 150
-const VERIFY_TIMEOUT_MS = 5000
+const UI_SETTLE_MILLIS = 150
+const VERIFY_TIMEOUT_MILLIS = 5000
 
 const WORKING_CLASS = "did-not-get-it-hide"
 
 function getCandidates(labelName: string): MailCandidate[] {
 	const candidates: MailCandidate[] = []
 
-	for (const row of visibleRows()) {
+	for (const row of getVisibleRows()) {
 		if (!isUnread(row) || hasLabel(row, labelName)) continue
 
 		const id = getThreadId(row)
@@ -76,30 +79,31 @@ async function markAsRejection(
 		}
 		if (selected.length === 0) return alreadyDone
 
-		await sleep(UI_SETTLE_MS)
+		await sleep(UI_SETTLE_MILLIS)
 
 		if (userInputSince(startedAt)) return alreadyDone // last point to back off
 
-		await applyLabel(labelName)
+		const createdLabel = await applyLabel(labelName)
 
 		if (markAsRead) {
-			await sleep(UI_SETTLE_MS)
+			await sleep(UI_SETTLE_MILLIS)
 			markSelectionAsRead()
 		}
 		await waitFor(
 			() => selected.every((id) => isDone(findRow(id), labelName, markAsRead)),
 			`"${labelName}"${markAsRead ? " + read state" : ""} on ${selected.length} row(s)`,
-			VERIFY_TIMEOUT_MS
+			VERIFY_TIMEOUT_MILLIS
 		)
+
+		if (createdLabel) await colorNewLabel(labelName)
+
 		return [...alreadyDone, ...selected]
 	} finally {
+		await closeLeftoverMenus()
+
 		// If the user touched the page meanwhile, they may have checked rows of their own
 		if (userInputSince(startedAt)) deselectRows(selected)
 		else deselectAll()
-
-		await closeLeftoverMenus().catch((err) =>
-			console.warn("[Gmail] Could not close menus:", err)
-		)
 
 		if (previousFocus instanceof HTMLElement && document.activeElement !== previousFocus) {
 			previousFocus.focus({ preventScroll: true })

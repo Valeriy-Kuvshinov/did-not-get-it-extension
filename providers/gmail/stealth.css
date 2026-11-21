@@ -7,3 +7,8 @@ html.did-not-get-it-hide [role="tooltip"] {
 html.did-not-get-it-hide tr.zA.x7 {
 	background: none !important;
 }
+
+html.did-not-get-it-hide :has(> * > [aria-modal="true"]),
+html.did-not-get-it-hide :has(> * > [aria-modal="true"]) * {
+	visibility: hidden !important;
+}

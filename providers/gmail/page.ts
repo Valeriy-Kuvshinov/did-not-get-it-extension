@@ -3,11 +3,25 @@ import { findVisible, isVisible, queryAll, userInputSince } from "../dom"
 import { GMAIL_DOM } from "./selectors"
 
 const INPUTS = ["INPUT", "TEXTAREA", "SELECT"]
-const USER_QUIET_MS = 3000
-/** Open drafts show up in the hash: #inbox?compose=new, or ?compose=<draft id> */
+
+const USER_IDLE_MILLIS = 3000
+
 const COMPOSE_HASH_PARAM = "compose="
 
-export function visibleRows(): HTMLTableRowElement[] {
+function isTyping(): boolean {
+	const active = document.activeElement
+
+	return (
+		active instanceof HTMLElement &&
+		(active.isContentEditable || INPUTS.includes(active.tagName))
+	)
+}
+
+function isComposeOpen(): boolean {
+	return location.hash.includes(COMPOSE_HASH_PARAM)
+}
+
+export function getVisibleRows(): HTMLTableRowElement[] {
 	return queryAll<HTMLTableRowElement>(GMAIL_DOM.row).filter(isVisible)
 }
 
@@ -16,7 +30,7 @@ export function getThreadId(row: Element): string | null {
 }
 
 export function findRow(threadId: string): HTMLTableRowElement | null {
-	return visibleRows().find((row) => getThreadId(row) === threadId) ?? null
+	return getVisibleRows().find((row) => getThreadId(row) === threadId) ?? null
 }
 
 export function getCheckbox(row: Element): HTMLElement {
@@ -50,26 +64,13 @@ export function textOf(row: Element, selector: string): string {
 	return row.querySelector(selector)?.textContent?.trim() ?? ""
 }
 
-function isTyping(): boolean {
-	const active = document.activeElement
-
-	return (
-		active instanceof HTMLElement &&
-		(active.isContentEditable || INPUTS.includes(active.tagName))
-	)
-}
-
-function isComposeOpen(): boolean {
-	return location.hash.includes(COMPOSE_HASH_PARAM)
-}
-
 /** False while the user is or was just active, or the list isn't in a state we can safely act on */
 export function isIdle(): boolean {
-	const rows = visibleRows()
+	const rows = getVisibleRows()
 
 	return (
 		!document.hidden &&
-		!userInputSince(performance.now() - USER_QUIET_MS) &&
+		!userInputSince(performance.now() - USER_IDLE_MILLIS) &&
 		!isTyping() &&
 		!isComposeOpen() &&
 		rows.length > 0 &&

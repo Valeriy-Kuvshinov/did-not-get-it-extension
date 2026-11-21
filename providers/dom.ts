@@ -1,5 +1,4 @@
-const REGEX_STRIP_BLOCKS = /<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi
-const REGEX_STRIP_TAGS = /<[^>]*>?/g
+import { waitFor } from "@/shared/utils"
 
 const CLICK_SEQUENCE = ["mouseover", "mousedown", "mouseup", "click"]
 
@@ -15,10 +14,6 @@ for (const type of ["pointerdown", "keydown", "wheel"]) {
 
 export function userInputSince(time: number): boolean {
 	return lastUserInputAt > time
-}
-
-export function sleep(ms: number): Promise<void> {
-	return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
 export function isVisible(el: Element): boolean {
@@ -37,26 +32,6 @@ export function findVisible<T extends HTMLElement = HTMLElement>(
 	root: ParentNode = document
 ): T | null {
 	return queryAll<T>(selector, root).find(isVisible) ?? null
-}
-
-/** Polls until `check` returns something truthy */
-export async function waitFor<T>(
-	check: () => T | null | undefined | false,
-	what: string,
-	timeoutMs = 3000
-): Promise<T> {
-	const deadline = performance.now() + timeoutMs
-
-	for (;;) {
-		const result = check()
-
-		if (result) return result
-
-		if (performance.now() >= deadline) break
-
-		await sleep(50)
-	}
-	throw new Error(`Timed out after ${timeoutMs}ms waiting for ${what}`)
 }
 
 /** Simulate user mouse actions */
@@ -80,6 +55,12 @@ export function unhover(el: Element) {
 	el.dispatchEvent(new MouseEvent("mouseout", { bubbles: true }))
 }
 
+/** Fills a text field the way typing would, so the page's input listeners pick it up */
+export function typeInto(input: HTMLInputElement, text: string) {
+	input.value = text
+	input.dispatchEvent(new Event("input", { bubbles: true }))
+}
+
 /** Clicks, then waits until the UI reflects it */
 export function clickAndWait<T>(
 	el: Element,
@@ -90,8 +71,4 @@ export function clickAndWait<T>(
 	realClick(el)
 
 	return waitFor(check, what, timeoutMs)
-}
-
-export function htmlToText(html: string): string {
-	return html.replace(REGEX_STRIP_BLOCKS, " ").replace(REGEX_STRIP_TAGS, " ")
 }

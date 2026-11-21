@@ -24,7 +24,11 @@
 
 		unwatchers.push(
 			rejectionTagItem.watch((value) => (rejectionTag = value)),
-			rejectionCountItem.watch((value) => (rejectionCount = value))
+			rejectionCountItem.watch((value) => (rejectionCount = value)),
+			unseenCountItem.watch((unseen) => {
+				// The popup already open, toolbar badge has nothing to add
+				if (unseen > 0) void unseenCountItem.setValue(0)
+			})
 		)
 	})
 

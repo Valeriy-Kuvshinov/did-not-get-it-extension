@@ -19,10 +19,10 @@ export const GMAIL_DOM = {
 	markAsReadBtn: '[role="button"][act="1"]',
 	labelsBtn: '[role="button"][data-tooltip="Labels"]', // (EN)
 	moreBtn: '[role="button"][data-tooltip="More"]', // (EN)
+	selectAllCheckbox: 'span[role="checkbox"]',
 
 	// Menus
 	menu: '[role="menu"]',
 	labelAsSubmenu: '[role="menuitem"].J-Ph',
 	labelItem: '[role="menuitemcheckbox"]',
-	applyBtn: '[role="menuitem"].J-JK:not([act])',
 } as const

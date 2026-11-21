@@ -3,3 +3,7 @@ html.did-not-get-it-hide [role="menu"] *,
 html.did-not-get-it-hide [role="tooltip"] {
 	visibility: hidden !important;
 }
+
+html.did-not-get-it-hide tr.zA.x7 {
+	background: none !important;
+}

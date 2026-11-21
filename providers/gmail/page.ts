@@ -27,14 +27,6 @@ export function getCheckbox(row: Element): HTMLElement {
 	return box
 }
 
-export function getToolbar(): HTMLElement {
-	const toolbar = findVisible(GMAIL_DOM.toolbar)
-
-	if (!toolbar) throw new Error("[Gmail] Main toolbar not visible")
-
-	return toolbar
-}
-
 export function isChecked(row: Element): boolean {
 	return row.querySelector(GMAIL_DOM.rowCheckbox)?.getAttribute("aria-checked") === "true"
 }

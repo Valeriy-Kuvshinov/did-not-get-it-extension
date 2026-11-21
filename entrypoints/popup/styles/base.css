@@ -44,6 +44,8 @@ html {
 			text-decoration: none;
 			transition: all 0.3s ease-in-out;
 			font-family: "cool-bold", Arial, sans-serif;
+			letter-spacing: 0.1ch;
+			word-spacing: 0.1ch;
 
 			&:hover,
 			&:focus-visible {

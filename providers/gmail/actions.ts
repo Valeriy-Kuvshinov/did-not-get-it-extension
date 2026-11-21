@@ -1,90 +1,41 @@
-import { clickAndWait, findVisible, queryAll, realClick, sleep, unhover, waitFor } from "../dom"
+import {
+	clickAndWait,
+	findVisible,
+	isVisible,
+	queryAll,
+	realClick,
+	sleep,
+	unhover,
+	waitFor,
+} from "../dom"
 
-import { findRow, getCheckbox, getToolbar, isChecked } from "./page"
+import { findRow, getCheckbox, isChecked } from "./page"
 
 import { GMAIL_DOM } from "./selectors"
 
+/** Time for a lingering "Label as" menu to show up after the label click */
+const MENU_SETTLE_MS = 400
 const MENU_TOGGLE_MS = 200
 
-function findLabelMenu(): HTMLElement | null {
-	return findVisible(GMAIL_DOM.labelItem)?.closest<HTMLElement>(GMAIL_DOM.menu) ?? null
-}
-
-function allMenusClosed(): boolean {
-	return !findVisible(GMAIL_DOM.menu)
-}
-
-/** Checks every visible toolbar, since Gmail can render more than one. */
-function findLabelEntryButton(): HTMLElement | null {
+function findInToolbar(selector: string): HTMLElement | null {
 	const toolbar = findVisible(GMAIL_DOM.toolbar)
 
-	if (!toolbar) return null
-
-	return findVisible(GMAIL_DOM.labelsBtn, toolbar) ?? findVisible(GMAIL_DOM.moreBtn, toolbar)
+	return toolbar ? findVisible(selector, toolbar) : null
 }
 
-/** Advanced toolbar has a Labels button; the simple one hides it under More → Label as ►. */
-async function openLabelMenu(): Promise<HTMLElement> {
-	const entryBtn = await waitFor(findLabelEntryButton, "the Labels or More toolbar button")
-
-	if (entryBtn.matches(GMAIL_DOM.labelsBtn)) {
-		return clickAndWait(entryBtn, findLabelMenu, "the Label-as menu")
-	}
-	const labelAs = await clickAndWait(
-		entryBtn,
-		() => findVisible(`${GMAIL_DOM.menu} ${GMAIL_DOM.labelAsSubmenu}`),
-		'"Label as" in the More menu'
-	)
-	return clickAndWait(labelAs, findLabelMenu, "the Label-as menu")
+/** Advanced toolbar has a Labels button; the simple one hides labels under More → Label as ► */
+function findLabelEntryButton(): HTMLElement | null {
+	return findInToolbar(GMAIL_DOM.labelsBtn) ?? findInToolbar(GMAIL_DOM.moreBtn)
 }
 
-export async function applyLabelToSelection(labelName: string) {
-	const menu = await openLabelMenu()
-
-	const item = queryAll(GMAIL_DOM.labelItem, menu).find(
-		(el) => el.getAttribute("title") === labelName
-	)
-
-	if (!item) {
-		throw new Error(`[Gmail] Label "${labelName}" doesn't exist. Create it in Gmail once.`)
-	}
-	if (item.getAttribute("aria-checked") !== "true") {
-		await clickAndWait(
-			item,
-			() => item.getAttribute("aria-checked") === "true",
-			`"${labelName}" to get checked`
-		)
-
-		const applyBtn = findVisible(GMAIL_DOM.applyBtn, menu)
-
-		if (applyBtn) realClick(applyBtn)
-	}
-	await closeMenus()
+function isAnyMenuOpen(): boolean {
+	return !!findVisible(GMAIL_DOM.menu)
 }
 
-/**
- * Ticking a label leaves "Label as" open and outside clicks / Escape don't close it.
- * Toggling the button that opened it (More, or Labels on the advanced toolbar) does.
- * A second click covers the case where the first one reopened More instead.
- */
-export async function closeMenus() {
-	for (let attempt = 0; attempt < 2 && !allMenusClosed(); attempt++) {
-		const toggleBtn = findLabelEntryButton()
-
-		if (!toggleBtn) break
-
-		realClick(toggleBtn)
-		unhover(toggleBtn)
-
-		await sleep(MENU_TOGGLE_MS)
-	}
-	if (!allMenusClosed()) throw new Error("[Gmail] Menus stayed open after toggling More")
-}
-
-export function markSelectionAsRead() {
-	const btn = findVisible(GMAIL_DOM.markAsReadBtn, getToolbar())
-
-	if (btn) realClick(btn) // absent when nothing selected is unread
+/** Synthetic clicks leave toolbar controls in their hover look, so drop it right away */
+function clickAndUnhover(el: HTMLElement) {
+	realClick(el)
+	unhover(el)
 }
 
 export function selectRow(id: string, row: HTMLTableRowElement) {
@@ -95,10 +46,70 @@ export function selectRow(id: string, row: HTMLTableRowElement) {
 	)
 }
 
-export function deselect(ids: string[]) {
+/** More → Label as ► → label (or Labels → label). Clicking the label applies it to the selection */
+export async function applyLabel(labelName: string) {
+	const entryBtn = await waitFor(findLabelEntryButton, "the Labels or More button")
+
+	realClick(entryBtn)
+
+	if (entryBtn.matches(GMAIL_DOM.moreBtn)) {
+		const labelAs = await waitFor(
+			() => findVisible(GMAIL_DOM.labelAsSubmenu),
+			'"Label as" in the More menu'
+		)
+		realClick(labelAs) // no unhover here: leaving "Label as" closes its submenu
+	}
+	await waitFor(() => findVisible(GMAIL_DOM.labelItem), "the Label-as menu")
+
+	const item = queryAll(GMAIL_DOM.labelItem).find((el) => el.title === labelName && isVisible(el))
+
+	if (!item) {
+		throw new Error(`[Gmail] Label "${labelName}" doesn't exist. Create it in Gmail once.`)
+	}
+	// Already ticked means every selected row has it, and a click would remove it
+	if (item.getAttribute("aria-checked") !== "true") realClick(item)
+
+	unhover(entryBtn)
+}
+
+export function markSelectionAsRead() {
+	const btn = findInToolbar(GMAIL_DOM.markAsReadBtn)
+
+	if (btn) clickAndUnhover(btn) // absent when nothing selected is unread
+}
+
+/** One click on the toolbar's Select checkbox clears the whole selection */
+export function deselectAll() {
+	const box = findInToolbar(GMAIL_DOM.selectAllCheckbox)
+
+	// "false" means nothing is selected, and a click would select every row instead
+	if (box && box.getAttribute("aria-checked") !== "false") clickAndUnhover(box)
+}
+
+/** Unchecks only the given rows, leaving any the user checked alone */
+export function deselectRows(ids: string[]) {
 	for (const id of ids) {
 		const row = findRow(id)
 
 		if (row && isChecked(row)) realClick(getCheckbox(row))
 	}
+}
+
+/**
+ * Clicking a label should close both menus, but "Label as" can linger or pop back up a moment later.
+ * Toggling the button that opened it closes it; a second toggle covers the first one reopening More.
+ */
+export async function closeLeftoverMenus() {
+	await sleep(MENU_SETTLE_MS)
+
+	for (let toggles = 0; toggles < 2 && isAnyMenuOpen(); toggles++) {
+		const entryBtn = findLabelEntryButton()
+
+		if (!entryBtn) break
+
+		clickAndUnhover(entryBtn)
+
+		await sleep(MENU_TOGGLE_MS)
+	}
+	if (isAnyMenuOpen()) throw new Error("[Gmail] A menu stayed open after toggling More")
 }

@@ -20,7 +20,7 @@ To build and package this extension from source, your environment must meet the 
 
 - **Framework/Bundler:** [WXT](https://wxt.dev/) (Web Extension Tools)
 - **Language:** TypeScript, Svelte 5 (popup)
-- **APIs:** No external APIs and no OAuth. A content script works through Gmail's web interface; the only extension permission is `storage`.
+- **APIs:** No external APIs and no OAuth. A content script works through Gmail's web interface; the only extension permissions are `storage` and `activeTab`.
 
 ## Step-by-Step Build Instructions
 

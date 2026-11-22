@@ -23,6 +23,7 @@ const REJECTION_PATTERNS: RegExp[] = [
 	// Not a match
 	/(?:profile|experience|background|skills|qualifications|application) (?:does not|doesn'?t|do not|don'?t)(?: fully)? match/i,
 	/(?:not a match|don'?t have a match|wasn'?t a match)/i,
+	/(?:did not|didn'?t|do not|don'?t) (?:find|think|feel|believe) (?:it|you(?:'re)?|your (?:profile|application|experience|background)) (?:(?:to be|would be|is|are) )?(?:a |the )?(?:good |strong |right )?(?:match|fit)/i,
 
 	// The "Impressive but no" template
 	/(?:while|although) your (?:background|experience) is (?:certainly |very |indeed )?impressive/i,

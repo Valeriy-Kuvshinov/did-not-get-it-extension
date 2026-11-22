@@ -21,6 +21,7 @@
 		opacity: 0.5;
 		filter: grayscale(1);
 		user-select: none;
+		font-size: 0.75rem;
 
 		svg {
 			width: 1.75rem;
@@ -28,7 +29,6 @@
 		}
 
 		span {
-			font-size: 0.75rem;
 			letter-spacing: 0;
 		}
 

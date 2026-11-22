@@ -37,9 +37,9 @@
 
 <article
 	class="app-container flex column"
-	class:firefox-corners={import.meta.env.BROWSER === "firefox"}>
+	class:chrome={import.meta.env.BROWSER === "chrome"}>
 	<header class="app-header flex full-center w-100">
-		<h1>Customize Your Rejection</h1>
+		<h1 class="text-family-bold">Customize Your Rejection</h1>
 	</header>
 
 	<LabelForm {rejectionTag} />

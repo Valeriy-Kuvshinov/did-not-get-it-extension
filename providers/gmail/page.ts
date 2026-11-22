@@ -2,6 +2,17 @@ import { findVisible, isVisible, queryAll, realClick } from "../dom"
 
 import { GMAIL_DOM } from "./selectors"
 
+const LABEL_VIEW_HASH = "#label/"
+
+function getViewedLabel(): string | null {
+	if (!location.hash.startsWith(LABEL_VIEW_HASH)) return null
+
+	// Whatever follows the name is a page number or an open email
+	const encodedName = location.hash.slice(LABEL_VIEW_HASH.length).split("/")[0] ?? ""
+
+	return decodeURIComponent(encodedName.replace(/\+/g, " "))
+}
+
 export function findInToolbar(selector: string): HTMLElement | null {
 	const toolbar = findVisible(GMAIL_DOM.toolbar)
 
@@ -48,6 +59,11 @@ export function isUnread(row: Element): boolean {
 }
 
 export function hasLabel(row: Element, labelName: string): boolean {
+	const viewedLabel = getViewedLabel()
+
+	// Currently viewing the label's letters
+	if (viewedLabel && isSameLabel(viewedLabel, labelName)) return true
+
 	return queryAll(GMAIL_DOM.labelChip, row).some((chip) => isSameLabel(chip.title, labelName))
 }
 

@@ -88,3 +88,40 @@ export function clickAndWait<T>(
 
 	return waitFor(check, what, timeoutMs)
 }
+
+/**
+ * Holds the scroll containers around an element in place, undoing scrolls the page makes
+ * on its own, like bringing a clicked row into view. Lets go once the user clicks, types or scrolls.
+ */
+export class ScrollLock {
+	private readonly positions = new Map<Element, number>()
+	private readonly lockedAt = performance.now()
+	private readonly onScroll = this.undoScroll.bind(this)
+
+	constructor(inside: Element) {
+		for (let node = inside.parentElement; node; node = node.parentElement) {
+			this.positions.set(node, node.scrollTop)
+		}
+		addEventListener("scroll", this.onScroll, LISTENER_OPTIONS)
+	}
+
+	/** Stops holding, after putting back any scroll that hasn't been undone yet */
+	release() {
+		removeEventListener("scroll", this.onScroll, LISTENER_OPTIONS)
+
+		if (userInputSince(this.lockedAt)) return
+
+		for (const [scroller, top] of this.positions) scroller.scrollTop = top
+	}
+
+	/** Scroll events fire before the next frame is drawn, so an undone scroll never shows */
+	private undoScroll(e: Event) {
+		const scroller = e.target === document ? document.scrollingElement : e.target
+
+		if (!(scroller instanceof Element) || userInputSince(this.lockedAt)) return
+
+		const top = this.positions.get(scroller)
+
+		if (top !== undefined) scroller.scrollTop = top
+	}
+}

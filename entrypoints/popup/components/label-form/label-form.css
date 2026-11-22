@@ -9,8 +9,8 @@ form {
 			padding: 0 0.5rem;
 			font-size: 1.1rem;
 			gap: 0.5rem;
-			color: var(--scdclr2);
-			fill: var(--scdclr2);
+			color: var(--scdclr1);
+			fill: var(--scdclr1);
 
 			svg {
 				width: 1.5rem;
@@ -21,7 +21,7 @@ form {
 		input {
 			padding: 0.25rem 0.5rem;
 			background: var(--prmclr2);
-			color: var(--scdclr1);
+			color: var(--scdclr2);
 			border: 2px solid var(--prmclr4);
 			border-radius: 0.5rem;
 			font-size: 1rem;

@@ -4,7 +4,7 @@ import type { MailAdapter, MailCandidate } from "@/shared/interfaces/mail"
 
 import { sleep, waitFor } from "@/shared/utils"
 
-import { findVisible, userInputSince } from "../dom"
+import { findVisible, ScrollLock, userInputSince } from "../dom"
 
 import { fetchBody } from "./fetch-body"
 import {
@@ -99,6 +99,9 @@ async function markAsRejection(
 	const alreadyDone = ids.filter((id) => isDone(findRow(id), labelName, markAsRead))
 	const selected: string[] = []
 
+	// Prevent redundant scroll to bottom of the page during the operation
+	const scrollLock = new ScrollLock(findVisible(GMAIL_DOM.row) ?? document.body)
+
 	document.documentElement.classList.add(WORKING_CLASS)
 
 	try {
@@ -144,6 +147,7 @@ async function markAsRejection(
 			previousFocus.focus({ preventScroll: true })
 		}
 		document.documentElement.classList.remove(WORKING_CLASS)
+		scrollLock.release()
 	}
 }
 

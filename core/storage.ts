@@ -14,15 +14,15 @@ export const isPausedItem = storage.defineItem<boolean>("local:isPaused", {
 })
 /** Mark detected rejections as read, or only label them */
 export const isAutoReadItem = storage.defineItem<boolean>("local:isAutoRead", {
-	fallback: true,
+	fallback: false,
 })
 /** Rejections since the popup was last opened. Displayed in the pinned toolbar badge */
 export const unseenCountItem = storage.defineItem<number>("local:unseenCount", {
 	fallback: 0,
 })
 
-export async function saveLabel(tag: string) {
-	await rejectionTagItem.setValue(tag.trim() || DEFAULT_LABEL)
+export async function saveLabel(label: string) {
+	await rejectionTagItem.setValue(label)
 }
 
 export async function incrementRejectionCount(by = 1) {

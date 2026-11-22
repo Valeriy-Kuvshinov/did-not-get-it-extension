@@ -47,6 +47,7 @@ form {
 		fill: var(--prmclr1);
 		border: 1px solid transparent;
 		border-radius: 0.25rem;
+		box-shadow: 0 0 0.5rem color-mix(in srgb, var(--mnrclr1) 75%, transparent);
 
 		svg {
 			width: 1rem;
@@ -60,5 +61,25 @@ form {
 			fill: var(--mnrclr1);
 			border: 1px solid var(--mnrclr1);
 		}
+
+		&:disabled {
+			background: var(--scdclr3);
+			box-shadow: none;
+		}
+	}
+
+	.tag-error,
+	.tag-hint {
+		grid-column: 1 / -1;
+		padding: 0 0.5rem;
+		font-size: 0.85rem;
+	}
+
+	.tag-error {
+		color: var(--mnrclr2);
+	}
+
+	.tag-hint {
+		color: var(--scdclr2);
 	}
 }

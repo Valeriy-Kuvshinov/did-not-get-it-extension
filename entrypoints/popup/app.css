@@ -11,7 +11,7 @@
 	}
 
 	.scoreboard {
-		margin: 1rem 0;
+		margin: 0.5rem 0;
 		padding: 1rem;
 		background: var(--prmclr2);
 		border: 1px solid var(--prmclr4);

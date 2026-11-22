@@ -1,15 +1,29 @@
 import { waitFor } from "@/shared/utils"
 
-const CLICK_SEQUENCE = ["mouseover", "mousedown", "mouseup", "click"]
+const MOUSE_EVENTS = ["mouseover", "mousedown", "mouseup", "click"]
+
+const USER_INPUT_EVENTS = ["pointerdown", "keydown", "wheel"]
+
+const LISTENER_OPTIONS: AddEventListenerOptions = { capture: true, passive: true }
 
 let lastUserInputAt = -Infinity
 
+/** Called by the browser on each click, key press and scroll. Our synthetic events don't count */
 function recordUserInput(e: Event) {
 	if (e.isTrusted) lastUserInputAt = performance.now()
 }
 
-for (const type of ["pointerdown", "keydown", "wheel"]) {
-	addEventListener(type, recordUserInput, { capture: true, passive: true })
+/** Call at startup, before anything checks userInputSince */
+export function startTrackingUserInput() {
+	for (const type of USER_INPUT_EVENTS) {
+		addEventListener(type, recordUserInput, LISTENER_OPTIONS)
+	}
+}
+
+export function stopTrackingUserInput() {
+	for (const type of USER_INPUT_EVENTS) {
+		removeEventListener(type, recordUserInput, LISTENER_OPTIONS)
+	}
 }
 
 export function userInputSince(time: number): boolean {
@@ -20,6 +34,7 @@ export function isVisible(el: Element): boolean {
 	return el.getClientRects().length > 0
 }
 
+/** querySelectorAll as an array, so find/filter/some work on it */
 export function queryAll<T extends Element = HTMLElement>(
 	selector: string,
 	root: ParentNode = document
@@ -27,6 +42,7 @@ export function queryAll<T extends Element = HTMLElement>(
 	return Array.from(root.querySelectorAll<T>(selector))
 }
 
+/** First match that's actually on screen, skipping hidden copies the page keeps around */
 export function findVisible<T extends HTMLElement = HTMLElement>(
 	selector: string,
 	root: ParentNode = document
@@ -45,12 +61,12 @@ export function realClick(el: Element) {
 		clientX: rect.left + rect.width / 2,
 		clientY: rect.top + rect.height / 2,
 	}
-	for (const type of CLICK_SEQUENCE) {
+	for (const type of MOUSE_EVENTS) {
 		el.dispatchEvent(new MouseEvent(type, init))
 	}
 }
 
-/** End Gmail's hover styling */
+/** Synthetic clicks leave controls in their hover look; this ends it */
 export function unhover(el: Element) {
 	el.dispatchEvent(new MouseEvent("mouseout", { bubbles: true }))
 }

@@ -4,33 +4,68 @@ import type { MailAdapter, MailCandidate } from "@/shared/interfaces/mail"
 
 import { sleep, waitFor } from "@/shared/utils"
 
-import { userInputSince } from "../dom"
+import { findVisible, userInputSince } from "../dom"
+
 import { fetchBody } from "./fetch-body"
 import {
 	findRow,
 	getThreadId,
 	hasLabel,
 	isDone,
-	isIdle,
 	isUnread,
 	textOf,
 	getVisibleRows,
+	isChecked,
+	isAnyMenuOpen,
 } from "./page"
+import { GMAIL_DOM } from "./selectors"
 import {
 	selectRow,
-	applyLabel,
 	markSelectionAsRead,
 	deselectRows,
 	deselectAll,
-	closeLeftoverMenus,
-	colorNewLabel,
-} from "./actions"
-import { GMAIL_DOM } from "./selectors"
+} from "./actions/selection-actions"
+import { applyLabel, closeLeftoverMenus } from "./actions/label-actions"
+import { colorLabel } from "./actions/label-color-actions"
 
 const UI_SETTLE_MILLIS = 150
-const VERIFY_TIMEOUT_MILLIS = 5000
+const VERIFY_TIMEOUT_MILLIS = 1000 * 5
 
 const WORKING_CLASS = "did-not-get-it-hide"
+
+const INPUTS = ["INPUT", "TEXTAREA", "SELECT"]
+
+const USER_IDLE_MILLIS = 1000 * 3
+
+const COMPOSE_HASH_PARAM = "compose="
+
+function isTyping(): boolean {
+	const active = document.activeElement
+
+	return (
+		active instanceof HTMLElement &&
+		(active.isContentEditable || INPUTS.includes(active.tagName))
+	)
+}
+
+function isComposeOpen(): boolean {
+	return location.hash.includes(COMPOSE_HASH_PARAM)
+}
+
+function isUserIdle(): boolean {
+	const rows = getVisibleRows()
+
+	return (
+		!document.hidden &&
+		!userInputSince(performance.now() - USER_IDLE_MILLIS) &&
+		!isTyping() &&
+		!isComposeOpen() &&
+		rows.length > 0 &&
+		!rows.some(isChecked) &&
+		!isAnyMenuOpen() &&
+		!!findVisible(GMAIL_DOM.toolbar)
+	)
+}
 
 function getCandidates(labelName: string): MailCandidate[] {
 	const candidates: MailCandidate[] = []
@@ -56,7 +91,7 @@ async function markAsRejection(
 	labelName: string,
 	markAsRead: boolean
 ): Promise<string[]> {
-	if (!isIdle()) return [] // the user is busy; try later
+	if (!isUserIdle()) return [] // the user is busy; try later
 
 	const startedAt = performance.now()
 	const previousFocus = document.activeElement
@@ -95,7 +130,7 @@ async function markAsRejection(
 			VERIFY_TIMEOUT_MILLIS
 		)
 
-		if (createdLabel) await colorNewLabel(labelName)
+		if (createdLabel) await colorLabel(labelName)
 
 		return [...alreadyDone, ...selected]
 	} finally {

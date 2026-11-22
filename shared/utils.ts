@@ -1,4 +1,5 @@
 const REGEX_STRIP_BLOCKS = /<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi
+
 const REGEX_STRIP_TAGS = /<[^>]*>?/g
 
 export function sleep(ms: number): Promise<void> {

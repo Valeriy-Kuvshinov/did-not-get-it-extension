@@ -42,7 +42,7 @@
 		<h1>Customize Your Rejection</h1>
 	</header>
 
-	<LabelForm bind:rejectionTag />
+	<LabelForm {rejectionTag} />
 
 	<div class="scoreboard flex column full-center">
 		<span class="text-family-bold">{rejectionCount}</span>

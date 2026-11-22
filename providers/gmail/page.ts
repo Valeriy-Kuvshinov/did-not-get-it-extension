@@ -1,24 +1,30 @@
-import { findVisible, isVisible, queryAll, userInputSince } from "../dom"
+import { findVisible, isVisible, queryAll, realClick } from "../dom"
 
 import { GMAIL_DOM } from "./selectors"
 
-const INPUTS = ["INPUT", "TEXTAREA", "SELECT"]
+export function findInToolbar(selector: string): HTMLElement | null {
+	const toolbar = findVisible(GMAIL_DOM.toolbar)
 
-const USER_IDLE_MILLIS = 3000
+	return toolbar ? findVisible(selector, toolbar) : null
+}
 
-const COMPOSE_HASH_PARAM = "compose="
+/** A dialog left open blocks the whole page */
+export function cancelDialog(dialog: HTMLElement) {
+	const cancelBtn = dialog.querySelector<HTMLElement>(GMAIL_DOM.dialogCancelBtn)
 
-function isTyping(): boolean {
-	const active = document.activeElement
+	if (cancelBtn && isVisible(cancelBtn)) realClick(cancelBtn)
+}
 
+/** Exact match on data-label-name, which also covers names with quotes or emoji */
+export function findSidebarLabel(labelName: string): HTMLElement | null {
 	return (
-		active instanceof HTMLElement &&
-		(active.isContentEditable || INPUTS.includes(active.tagName))
+		queryAll(GMAIL_DOM.sidebarLabelBtn).find((el) => el.dataset.labelName === labelName) ?? null
 	)
 }
 
-function isComposeOpen(): boolean {
-	return location.hash.includes(COMPOSE_HASH_PARAM)
+/** Gmail treats names that differ only in letter case as the same label */
+export function isSameLabel(a: string, b: string): boolean {
+	return a.toLowerCase() === b.toLowerCase()
 }
 
 export function getVisibleRows(): HTMLTableRowElement[] {
@@ -33,14 +39,6 @@ export function findRow(threadId: string): HTMLTableRowElement | null {
 	return getVisibleRows().find((row) => getThreadId(row) === threadId) ?? null
 }
 
-export function getCheckbox(row: Element): HTMLElement {
-	const box = row.querySelector<HTMLElement>(GMAIL_DOM.rowCheckbox)
-
-	if (!box) throw new Error("[Gmail] Row checkbox not found")
-
-	return box
-}
-
 export function isChecked(row: Element): boolean {
 	return row.querySelector(GMAIL_DOM.rowCheckbox)?.getAttribute("aria-checked") === "true"
 }
@@ -50,9 +48,7 @@ export function isUnread(row: Element): boolean {
 }
 
 export function hasLabel(row: Element, labelName: string): boolean {
-	return queryAll(GMAIL_DOM.labelChip, row).some(
-		(chip) => chip.getAttribute("title") === labelName
-	)
+	return queryAll(GMAIL_DOM.labelChip, row).some((chip) => isSameLabel(chip.title, labelName))
 }
 
 /** Labeled, and also read (if user wants rejections marked as read) */
@@ -64,18 +60,14 @@ export function textOf(row: Element, selector: string): string {
 	return row.querySelector(selector)?.textContent?.trim() ?? ""
 }
 
-/** False while the user is or was just active, or the list isn't in a state we can safely act on */
-export function isIdle(): boolean {
-	const rows = getVisibleRows()
+export function isAnyMenuOpen(): boolean {
+	return !!findVisible(GMAIL_DOM.menu)
+}
 
+/** A collapsed sidebar peeks open while hovered; the "sliding" class is only there mid-animation */
+export function hasSlidOpen(sidebar: HTMLElement): boolean {
 	return (
-		!document.hidden &&
-		!userInputSince(performance.now() - USER_IDLE_MILLIS) &&
-		!isTyping() &&
-		!isComposeOpen() &&
-		rows.length > 0 &&
-		!rows.some(isChecked) &&
-		!findVisible(GMAIL_DOM.menu) &&
-		!!findVisible(GMAIL_DOM.toolbar)
+		sidebar.classList.contains(GMAIL_DOM.sidebarSlidOpenClass) &&
+		!sidebar.classList.contains(GMAIL_DOM.sidebarSlidingClass)
 	)
 }
